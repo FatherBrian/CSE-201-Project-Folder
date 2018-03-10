@@ -13,7 +13,7 @@ class general {
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/
 			bootstrap.min.css">
 			<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-			<link rel="stylesheet" href="/resources/css/style.css">
+			<link rel="stylesheet" href="../resources/css/style.css">
 		</head>';
 		echo $text;
 	}
@@ -21,7 +21,7 @@ class general {
 	function title() {
 		$text = '<header class="bgimage">
 			<div class="Header container-fluid">
-				<h1> AKPsight </h1>
+				<h1> CollegeBook </h1>
 			</div>
 		</header>';
 		echo $text;
