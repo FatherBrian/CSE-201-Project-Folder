@@ -1,5 +1,5 @@
 <?php
-class general {
+class page {
 
 	// Functions meant to generate html text
 
@@ -35,7 +35,7 @@ class general {
 			echo $text;
 	}
 
-	function nav_login() {
+	function navLogin() {
 		$text = '<nav style="margin: 0;" class="navbar navbar-inverse navbar-static-top">
 		  <div class="container-fluid">
 
