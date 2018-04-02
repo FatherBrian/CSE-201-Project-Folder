@@ -19,7 +19,7 @@ class login {
 	}
 
 	function grab($connection) {		
-		$query = "Select * From users Where username = 'nick'";
+		$query = "Select * From user Where username = 'nick'";
 		$result = mysqli_query($connection, $query); // True or false if query works and finds record
 		if ($result && mysqli_affected_rows($connection) == 1) { 	// Tests if anything was found && if something was successfully changed with connection 
 			$array = mysqli_fetch_array($result); // Gets all values needed from specific query according to name
@@ -29,7 +29,7 @@ class login {
 	}
 
 	function login($db, $username, $password) {
-	    $query = "Select userID From user Where username ='$username' and password = '$password';
+	    $query = "Select userID From user Where username ='$username' and password = '$password'";
 	    $result = mysqli_query($connection, $query);
 	    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
 	    $active = $row['active'];
@@ -46,8 +46,23 @@ class login {
     }
 
 
-    function createAccount($db, $username, $password) {
+    function createAccount($db, $username, $password, $email) {
 
-    }
+        $querycheck = "Select username From user Where username = '$username'";
+        $resultcheck = mysqli_query($db, $querycheck);
+        $count = mysqli_num_rows($resultcheck);
+
+        if($count==0){
+        $query = "INSERT INTO user (username,password,email) VALUES('$username', '$password', '$email')";
+        $result = mysqli_query($db,$query);
+        if($result){
+            $msg = "Registered Succesfully";
+            echo $msg;
+            }
+        } else {
+            $errormsg = "Username already exists!";
+            echo $errormsg;
+            }
+   }
 }
 ?>
