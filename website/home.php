@@ -14,6 +14,8 @@
 
 <?php $gen->navLogin(); ?>
 
+<?php $home->generateHomePage(); ?>
+
 <?php $gen->footer(); ?>
 
 </body>

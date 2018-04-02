@@ -1,7 +1,7 @@
 <?php
 class home {
 
-	function x() {
+	function generateHomePage() {
 
 	}
 
