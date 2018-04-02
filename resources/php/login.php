@@ -27,5 +27,27 @@ class login {
 			$_SESSION['logged'] = "Yes";
 		}
 	}
-}	
+
+	function login($db, $username, $password) {
+	    $query = "Select userID From user Where username ='$username' and password = '$password';
+	    $result = mysqli_query($connection, $query);
+	    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+	    $active = $row['active'];
+	    $count = mysqli_num_rows($result);
+
+	    if($count ==1){
+	    session_register("myusername");
+                 $_SESSION['login_user'] = $myusername;
+
+                 header("location: welcome.php");
+              }else {
+                 $error = "Your Login Name or Password is invalid";
+       }
+    }
+
+
+    function createAccount($db, $username, $password) {
+
+    }
+}
 ?>
