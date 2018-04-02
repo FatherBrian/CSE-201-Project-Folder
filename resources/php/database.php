@@ -17,5 +17,6 @@ class database {
 	function close($connection) {
 		mysqli_close($connection);
 	}
-	
+}
+
 ?>
