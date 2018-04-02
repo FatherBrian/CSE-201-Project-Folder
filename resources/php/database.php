@@ -1,4 +1,5 @@
 <?php
+class database {
 
 	function connect() {
 		$dbhost = "";
@@ -25,6 +26,6 @@
 			$_SESSION['logged'] = "Yes";
 		}
 	}
-	
+}	
 	
 ?>
