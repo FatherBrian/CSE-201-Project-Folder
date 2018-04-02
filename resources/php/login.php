@@ -29,9 +29,9 @@ class login {
 	}
 
 	function userLogin($db) {
-		$username = $_POST["username"];
+		$email = $_POST["email"];
 		$password = $_POST["password"];
-	    $query = "Select userID From user Where username ='$username' and password = '$password';";
+	    $query = "Select userID From user Where email ='$email' and password = '$password';";
 	    $result = mysqli_query($db, $query);
 		if (mysqli_num_rows($result) > 0) {
 			$_SESSION['login_user'] = $myusername;
@@ -54,7 +54,7 @@ class login {
         if($count==0) {
 			$query = "INSERT INTO user (username,password,email) VALUES('$username', '$password', '$email')";
 			$result = mysqli_query($db,$query);
-			if($result){
+			if($result) {
 				header("location: home.php?register=success");
             }
         } else {

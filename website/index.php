@@ -36,7 +36,7 @@
 	<div class="col-xs-6">
 		<h1> <?php echo $loginHeader ?> </h1>
 		<form id="Download1" action="?action=submitLogin" method="post">
-			Username: <input id="Download_Code" type="text" name="username" value="">  </br></br>
+			Email: <input id="Download_Code" type="text" name="email" value="">  </br></br>
 			Password: <input id="Download_Code" type="password" name="password" value=""> </br></br>
 			<input id="login" type="submit" name="submit" value="submit">
 		</form>
