@@ -6,7 +6,7 @@ session_start();
 	$profile = "../resources/php/profile.php";
 	include($db);
 	include($page);
-	include($home);
+	include($profile);
 	$server = new database();
 	$gen = new page();
 	$profile = new profile();
