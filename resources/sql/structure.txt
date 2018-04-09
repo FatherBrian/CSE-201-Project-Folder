@@ -1,6 +1,8 @@
 user
 	fName
 	lName
+	password
 	bdate
 	college
 	country
+	email
