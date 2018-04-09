@@ -43,7 +43,7 @@ class page {
 			<div class="navbar-header" id="bs-example-navbar-collapse-1">
 			  <ul class="nav navbar-nav">
 				<li class="dropdown">
-				<li><a href="/AKPsi-Attendance/Login.php">Login</a></li>
+				<li><a href="/CSE-201-Project-Folder/website/index.php">Login</a></li>
 				</li>
 				</ul>
 			</div><!-- /.navbar-collapse -->
@@ -52,6 +52,27 @@ class page {
 		echo $text;
 	}
 
+	function nav() {
+		$text = '<nav style="margin: 0;" class="navbar navbar-inverse navbar-static-top">
+		  <div class="container-fluid">
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="navbar-header" id="bs-example-navbar-collapse-1">
+			  <ul class="nav navbar-nav">
+				<li class="dropdown">
+				<li>
+					<a href="/CSE-201-Project-Folder/website/profile.php">
+					<span><img style="width:30px;" src="/CSE-201-Project-Folder/resources/img/basic.png"/></span>
+					Profile</a></li>
+				</li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+		</nav>';
+		echo $text;
+	}
+	
+	
 	//General Input Fucntions
 	function show_subitem() {
 		$text = '$(document).ready(function () {
@@ -123,7 +144,7 @@ class page {
 		return $text;
 	}
 
-	function nav() {
+	function navOld() {
 		$connection = connect();
 		$text = '
 		<nav style="margin: 0;" class="navbar navbar-inverse navbar-static-top">

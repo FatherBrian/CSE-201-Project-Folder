@@ -1,0 +1,9 @@
+user
+	userID (int 9)
+	fName (Varchar 40)
+	lName (Varchar 40)
+	password (Varchar 40)
+	bDate (DATE)
+	college (Varchar 80)
+	country (Varchar 80)
+	email (Varchar 80)
