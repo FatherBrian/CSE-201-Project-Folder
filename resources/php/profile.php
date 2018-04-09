@@ -22,34 +22,34 @@ class profile {
     function generateProfile(){
         $profileInfo = getProfileInfo($connect);
 
-        $text = "<div class="container-fluid">
+        $text = '<div class="container-fluid">
                  <div class="row">
                     <div class="col-xs-6">
-                	<h2>";
+                	<h2>';
         $text = $text + $profileInfo[0];
-        $text = $text + "</h2>
+        $text = $text + '</h2>
                          </div>
                          <div class = "col-xs-6">
-                         <h2>";
+                         <h2>';
         $text = $text + $profileInfo[1];
-        $text = $text + "</h2>
+        $text = $text + '</h2>
                            </div>
                            <div class = "col-xs-6">
-                           <h2>";
+                           <h2>';
         $text = $text + profileInfo[2];
-        $text = $text + "</h2>
+        $text = $text + '</h2>
                            </div>
                            <div class = "col-xs-6">
-                           <h2>";
+                           <h2>';
         $text = $text + profileInfo[3];
-        $text = $text + "</h2>
+        $text = $text + '</h2>
                            </div>
                            <div class = "col-xs-6">
-                           <h2>";
+                           <h2>';
         $text = $text + profileInfo[4];
-        $text = $text + "</h2>
+        $text = $text + '</h2>
                           </div>
-                          </div>";
+                          </div>';
 
         echo $text;
 
