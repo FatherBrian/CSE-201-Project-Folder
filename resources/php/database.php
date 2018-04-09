@@ -2,10 +2,19 @@
 class database {
 
 	function connect() {
-		$dbhost = "";
-		$dbuser = "root";
-		$dbpass = "";
-		$dbname = "collegebook";
+		$user_agent = getenv("HTTP_USER_AGENT");
+
+		if(strpos($user_agent, "Win") !== FALSE) { 
+			$dbhost = "";
+			$dbuser = "root";
+			$dbpass = "";
+			$dbname = "collegebook";	
+		} elseif(strpos($user_agent, "Mac") !== FALSE) {
+			$dbhost = "";
+			$dbuser = "root";
+			$dbpass = "root";
+			$dbname = "collegebook";
+		}
 		$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 		// Testing connection success/failure
 		if(mysqli_connect_errno()) {
