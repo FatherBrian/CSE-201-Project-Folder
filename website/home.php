@@ -11,7 +11,6 @@
 	$home = new home();
 	$gen->head();
 	$connection = $server->connect();
-
 ?>
 
 <?php
@@ -24,7 +23,7 @@
 
 <?php $gen->title(); ?>
 
-<?php $gen->navLogin(); ?>
+<?php $gen->nav(); ?>
 
 <div class="container-fluid">
 <div class="row">

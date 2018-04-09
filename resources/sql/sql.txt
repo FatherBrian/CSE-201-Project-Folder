@@ -1,1 +1,0 @@
-INSERT INTO `user` (`userID`, `username`, `password`, `email`) VALUES (NULL, 'nick', 'nick', 'nickkane999@aol.com');
