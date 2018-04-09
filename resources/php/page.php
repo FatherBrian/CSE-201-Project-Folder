@@ -61,8 +61,9 @@ class page {
 			  <ul class="nav navbar-nav">
 				<li class="dropdown">
 				<li>
-					<img src="CSE-201-Project-Folder/resources/img/basic.png"></img>
-					<a href="/CSE-201-Project-Folder/website/profile.php">Profile</a></li>
+					<a href="/CSE-201-Project-Folder/website/profile.php">
+					<span><img style="width:30px;" src="/CSE-201-Project-Folder/resources/img/basic.png"/></span>
+					Profile</a></li>
 				</li>
 				</ul>
 			</div><!-- /.navbar-collapse -->
