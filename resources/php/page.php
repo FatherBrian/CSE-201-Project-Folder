@@ -143,7 +143,7 @@ class page {
 		return $text;
 	}
 
-	function nav() {
+	function navOld() {
 		$connection = connect();
 		$text = '
 		<nav style="margin: 0;" class="navbar navbar-inverse navbar-static-top">

@@ -1,0 +1,6 @@
+user
+	fName
+	lName
+	bdate
+	college
+	country
