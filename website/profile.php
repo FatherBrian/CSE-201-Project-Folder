@@ -19,11 +19,11 @@ function connect() {
 
 mysql_select_db(“user”)
 
-$userid = $_REQUEST(‘user ID’);
+$userid = $_REQUEST(‘userid’);
 
-$get = mysql_query(“SELECT * FROM userid WHERE userid = ‘$user ID’”);
+$get = mysql_query(“SELECT * FROM userid WHERE userid = ‘$userid’”);
 $get2 = mysql_fetch_assoc($get);
-$username = $get2 (‘user Name’)
+$username = $get2 (‘username’)
 
 ?>
 
@@ -40,8 +40,8 @@ $username = $get2 (‘user Name’)
 
 ID: <b><?php echo $userID; ?></b> 
 User Name: <b><?php echo $username; ?></b> 
-Password: <b><?php echo $Password; ?></b> 
-E-mail: <b><?php echo $e-mail; ?></b> 
+Password: <b><?php echo $password; ?></b> 
+E-mail: <b><?php echo $email; ?></b> 
 
 
 </body>
