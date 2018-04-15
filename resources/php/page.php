@@ -65,15 +65,21 @@ class page {
 					<span><img style="width:30px;" src="/CSE-201-Project-Folder/resources/img/basic.png"/></span>
 					Profile</a></li>
 				</li>
+				<li>
+				    <form id="Download2" action="?action=search" method="post">
+				    Search:<input id="Download_Code" type="text" name="search" value="" placeholder="Search for a user">
+				    <input id="submit" type="submit" name="submit" value="submit">
+				    </form></li>
 				</ul>
 			</div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>';
 		echo $text;
 	}
+
 	
 	
-	//General Input Fucntions
+	//General Input Functions
 	function show_subitem() {
 		$text = '$(document).ready(function () {
 					var subitem = $(".subitem");

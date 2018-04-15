@@ -18,8 +18,6 @@ session_start();
 
 <?php $gen->nav(); ?>
 
-
-
 <?php $profile->generateProfile($connection); ?>
 
 <?php $gen->footer(); ?>
