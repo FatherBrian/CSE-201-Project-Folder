@@ -27,35 +27,31 @@ class profile {
     }
 
     function addPost($db, $entry){
-	    $id = $_SESSION['userID'];
+	    $id = $_GET['id'];
 	    $time = date('Y-m-d H:i:s');
-        $query = "INSERT INTO posts (post, tstamp, userID) VALUES ('$entry', '$time' , '$id' )";
+        $query = "INSERT INTO posts (post, tStamp, userID) VALUES ('$entry', '$time' , '$id' )";
         mysqli_query($db, $query);
     }
 
     function getPreviousPostInfo($db){
 	   $posts = array();
-	   $id = $_SESSION['userID'];
-       $query = "SELECT post, tstamp, userID FROM posts WHERE userID = '$id'";
+	   $id = $_GET['id'];
+       $query = "SELECT post, tStamp, userID FROM posts WHERE userID = '$id'";
        $result = mysqli_query($db, $query);
        while($row = mysqli_fetch_assoc($result)){
           array_push($posts, $row['post'] , $row['tStamp']);
        }
-       echo $posts;
+       return $posts;
 
     }
 
     function generatePreviousPosts($db){
 	    $posts = $this->getPreviousPostInfo($db);
-        $text =' <div class="container-fluid"><div class="row">
-        <div class="col-l-30"></div>
-        <div class="col-l-60"><h2><ul>
-        <li><h2>'.$posts[0].'</h2><p>'.$posts[1].'</p></li>
-        <li><h2>'.$posts[2].'</h2><p>'.$posts[3].'</p></li>
-        <li><h2>'.$posts[4].'</h2><p>'.$posts[5].'</p></li>
-        <li><h2>'.$posts[6].'</h2><p>'.$posts[7].'</p></li>
-        <li><h2>'.$posts[8].'</h2><p>'.$posts[9].'</p></li>
-        </ul></h2></div></div>';
+        $text =' <div class="container-fluid"><div class="row"><div class="col-xs-12"><h1>Posts</h1></div>';
+		foreach($posts as $post) {
+			$text .= '<div class="col-xs-12"><h3>' . $posts[1] . "</h3><p>" . $posts[0] . "</p></div>";
+		}
+		$text .= '</div></div>';
         echo $text;
     }
 
