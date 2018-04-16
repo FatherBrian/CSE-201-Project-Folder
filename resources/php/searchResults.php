@@ -9,12 +9,11 @@
 class searchResults
 {
 
-    function getResults($db)
+    function getResults($db, $formData)
     {
         $results = array();
-        $search = $_POST['search'];
 
-        $query = "Select fName, lName From user Where fName LIKE %$search% OR lName LIKE %$search%";
+        $query = "Select fName, lName From user Where fName LIKE %$formData% OR lName LIKE %$formData%";
         $qResult = mysqli_query($db, $query);
         if (mysqli_num_rows() > 0) {
             while ($row = mysqli_fetch_assoc($qResult)) {
@@ -26,9 +25,8 @@ class searchResults
     }
 
 
-    function generateResults($db){
-        $results = $this->getResults($db);
-
+    function generateResults($db, $formData){
+        $results = $this->getResults($db, $formData);
         $text = '<div class="container-fluid"><div class="row"><div class="col-xs-6">';
         foreach ($results as &$value) {
             $query = "Select fName, lName From user Where userID = '$value'";

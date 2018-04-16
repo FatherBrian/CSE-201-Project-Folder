@@ -24,13 +24,12 @@
 <?php $gen->title(); ?>
 
 <?php $gen->nav(); ?>
-
 <?php
-    if(isset($_GET['submit'])=='fail') { $loginHeader = "No Search Results."; }
-	else { $loginHeader = "Results"; }
+    if(isset($_POST['submitEntry'])){
+        $formData=$_POST['searchEntry'];
+    }
 ?>
-
-<?php $searchResults->generateResults($connection); ?>
+<?php $searchResults->generateResults($connection,$formData); ?>
 
 <?php $gen->footer(); ?>
 </body>

@@ -66,9 +66,9 @@ class page {
 					Profile</a></li>
 				</li>
 				<li>
-				    <form id="Download2" action="?action=search" method="post">
-				    Search:<input id="Download_Code" type="text" name="search" value="" placeholder="Search for a user">
-				    <input id="submit" type="submit" name="submit" value="submit">
+				    <form action="?action=submitEntry" method="post">
+				    <input type="search" name="searchEntry" value="" placeholder="Enter a name">
+				    <input type="submit" name="submitEntry" value="Search">
 				    </form></li>
 				</ul>
 			</div><!-- /.navbar-collapse -->
