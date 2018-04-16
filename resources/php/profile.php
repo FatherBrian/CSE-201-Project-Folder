@@ -1,7 +1,7 @@
 <?php
 class profile {
 
-	function getProfileInfo($db){
+	function getMyProfile($db){
 	    $profileInfo = array();
 
 	    $userid = $_SESSION["userID"];

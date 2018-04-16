@@ -61,7 +61,7 @@ class page {
 			  <ul class="nav navbar-nav">
 				<li class="dropdown">
 				<li>
-					<a href="/CSE-201-Project-Folder/website/profile.php">
+					<a href="/CSE-201-Project-Folder/website/profile.php?id="' . $_SESSION["userID"] . '>
 					<span><img style="width:30px;" src="/CSE-201-Project-Folder/resources/img/basic.png"/></span>
 					Profile</a></li>
 				</li>
