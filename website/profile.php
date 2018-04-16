@@ -20,6 +20,15 @@ session_start();
 
 <?php $profile->generateProfile($connection); ?>
 
+<?php $profile->getPostSystem(); ?>
+
+<?php if(isset($_POST['submit'])) {
+    $entry = $_POST['posts'];
+    $profile->addPost($connection, $entry);
+      }?>
+
+<?php $profile->generatePreviousPosts($connection); ?>
+
 <?php $gen->footer(); ?>
 
 </body>

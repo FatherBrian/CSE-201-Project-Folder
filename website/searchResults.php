@@ -27,6 +27,7 @@
     if(isset($_POST['submitEntry'])){
         $formData = $_POST['searchEntry'];
     }
+
 ?>
 <?php $searchResults->generateResults($connection,$formData); ?>
 
