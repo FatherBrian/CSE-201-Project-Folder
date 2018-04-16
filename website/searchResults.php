@@ -12,7 +12,6 @@
 	$searchResults = "../resources/php/searchResults.php";
 	include($db);
 	include($page);
-	include($home);
 	include($searchResults);
 	$server = new database();
 	$gen = new page();
@@ -26,7 +25,7 @@
 <?php $gen->nav(); ?>
 <?php
     if(isset($_POST['submitEntry'])){
-        $formData=$_POST['searchEntry'];
+        $formData = $_POST['searchEntry'];
     }
 ?>
 <?php $searchResults->generateResults($connection,$formData); ?>

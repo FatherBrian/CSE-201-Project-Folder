@@ -11,6 +11,7 @@
 	$log = new login();
 	$gen->head();
 	$connection = $server->connect();
+	if (isset($_SESSION['userID'])) { header("location: home.php"); }
 ?>
 
 <?php

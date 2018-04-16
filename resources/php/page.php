@@ -1,8 +1,40 @@
 <?php
 class page {
-
 	// Functions meant to generate html text
 
+	function connectDB() {
+		$user_agent = getenv("HTTP_USER_AGENT");
+
+		if(strpos($user_agent, "Win") !== FALSE) { 
+			$dbhost = "";
+			$dbuser = "root";
+			$dbpass = "";
+			$dbname = "collegebook";	
+		} elseif(strpos($user_agent, "Mac") !== FALSE) {
+			$dbhost = "";
+			$dbuser = "root";
+			$dbpass = "root";
+			$dbname = "collegebook";
+		}
+		$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+		// Testing connection success/failure
+		if(mysqli_connect_errno()) {
+			die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ")"); 
+		}
+		return $connection;
+	}	
+	
+	function getProfilePic($db) {
+	    $query = "Select * From user Where userID = " . $_SESSION["userID"];
+	    $result = mysqli_query($db, $query);
+
+	    if(mysqli_num_rows($result) > 0) {
+	        $row = mysqli_fetch_assoc($result);
+			$img = "/CSE-201-Project-Folder/resources/img/". $row["srcImg"];
+			return $img;
+	    }
+	}
+	
 	function head() {
 		$text = ' <!DOCTYPE html>
 		<html lang="en">
@@ -21,7 +53,7 @@ class page {
 	function title() {
 		$text = '<header class="bgimage">
 			<div class="Header container-fluid">
-				<h1> CollegeBook </h1>
+				<a href="/CSE-201-Project-Folder/website" style="text-decoration:none; color:black;"><h1> CollegeBook </h1></a>
 			</div>
 		</header>';
 		echo $text;
@@ -53,6 +85,8 @@ class page {
 	}
 
 	function nav() {
+		$connection = $this->connectDB();
+		$img = $this->getProfilePic($connection);
 		$text = '<nav style="margin: 0;" class="navbar navbar-inverse navbar-static-top">
 		  <div class="container-fluid">
 
@@ -61,12 +95,12 @@ class page {
 			  <ul class="nav navbar-nav">
 				<li class="dropdown">
 				<li>
-					<a href="/CSE-201-Project-Folder/website/profile.php?id="' . $_SESSION["userID"] . '>
-					<span><img style="width:30px;" src="/CSE-201-Project-Folder/resources/img/basic.png"/></span>
+					<a href="/CSE-201-Project-Folder/website/profile.php?id='. $_SESSION["userID"] . '">
+					<span><img style="width:30px;" src="'. $img .'"/></span>
 					Profile</a></li>
 				</li>
 				<li>
-				    <form action="?action=submitEntry" method="post">
+				    <form action="/CSE-201-Project-Folder/website/searchResults.php" style="padding-top:20px;" method="post">
 				    <input type="search" name="searchEntry" value="" placeholder="Enter a name">
 				    <input type="submit" name="submitEntry" value="Search">
 				    </form></li>
