@@ -46,7 +46,7 @@ class profile {
     }
 
     function generatePreviousPosts($db){
-	    $posts = getPreviousPostInfo($db);
+	    $posts = $this->getPreviousPostInfo($db);
         $text =' <div class="container-fluid"><div class="row">
         <div class="col-l-30"></div>
         <div class="col-l-60"><h2><ul>
