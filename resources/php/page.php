@@ -104,6 +104,9 @@ class page {
 				    <input type="search" name="searchEntry" value="" placeholder="Enter a name">
 				    <input type="submit" name="submitEntry" value="Search">
 				    </form></li>
+				<li>
+				    <a href="/CSE-201-Project-Folder/website/logout.php">Logout</a>
+				    </li>
 				</ul>
 			</div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
