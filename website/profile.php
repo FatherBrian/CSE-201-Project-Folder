@@ -18,6 +18,10 @@ session_start();
 
 <?php $gen->nav(); ?>
 
+<?php $profile->getFriends($connection); ?>
+
+<?php $profile->getFriendRequests($connection); ?>
+
 <?php $profile->generateProfile($connection); ?>
 
 <?php $profile->getPostSystem(); ?>
@@ -25,7 +29,13 @@ session_start();
 <?php if(isset($_POST['submit'])) {
     $entry = $_POST['posts'];
     $profile->addPost($connection, $entry);
-      }?>
+      } ?>
+
+<?php
+    if(isset($_POST['addFriend'])) {
+        $profile->requestFriend($connection);
+    }
+?>
 
 <?php $profile->generatePreviousPosts($connection); ?>
 

@@ -29,6 +29,12 @@
 
 <?php $other->generateProfile($connection); ?>
 
+<?php
+if(isset($POST['friendButton'])){
+    $other->addFriend($connection);
+}
+?>
+
 <?php $gen->footer(); ?>
 </body>
 </html>
