@@ -14,13 +14,29 @@ session_start();
 	$connection = $server->connect();
 ?>
 
+<?php
+	if (isset($_GET['action'])) { $action = $_GET['action']; } 
+	else { $action = "none"; }
+
+	if($action=='addFriend') { $profile->acceptFriend($connection, $_GET['id']); } 
+	elseif($action=='deleteFriend') { $profile->deleteFriend($connection); }
+	elseif($action=='removeFriendRequest') { $profile->removeRequestFriend($connection); }
+	elseif($action=='sendFriendRequest') { $profile->sendRequestFriend($connection); }
+	
+	if(isset($_GET['login'])=='fail') { $loginHeader = "Login unsuccessful, please try again."; } 
+	else { $loginHeader = "Login"; }
+
+	if(isset($_GET['create'])=='fail') { $createHeader = "Account already exists"; } 
+	else { $createHeader = "Create Account"; }	
+?>
+
 <?php $gen->title(); ?>
 
 <?php $gen->nav(); ?>
 
 <?php $profile->getFriends($connection); ?>
 
-<?php $profile->getFriendRequests($connection); ?>
+<!--- <?php $profile->getFriendRequests($connection); ?> --->
 
 <?php $profile->generateProfile($connection); ?>
 
@@ -30,7 +46,8 @@ session_start();
 	if(isset($_POST['submit'])) {
 		$entry = $_POST['posts'];
 		$id = $_GET["id"];
-		$profile->addPost($connection, $entry, $id);
+		$postId = $_SESSION["userID"];
+		$profile->addPost($connection, $entry, $id, $postId);
 	}
 ?>
 

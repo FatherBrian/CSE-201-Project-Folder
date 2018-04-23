@@ -62,3 +62,10 @@ html, body {
 .extraText {
 	color: #DF3D82;
 }
+.addFriendButton {
+	background-color:#63ffa9;
+	padding:10px;
+    border:2px solid #04cc5d;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}

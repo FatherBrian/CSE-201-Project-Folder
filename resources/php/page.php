@@ -68,7 +68,7 @@ class page {
 	}
 
 	function navLogin() {
-		$text = '<nav style="margin: 0;" class="navbar navbar-inverse navbar-static-top">
+		$text = '<nav style="margin-bottom:10px;" class="navbar navbar-inverse navbar-static-top">
 		  <div class="container-fluid">
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -87,7 +87,7 @@ class page {
 	function nav() {
 		$connection = $this->connectDB();
 		$img = $this->getProfilePic($connection);
-		$text = '<nav style="margin: 0;" class="navbar navbar-inverse navbar-static-top">
+		$text = '<nav style="margin-bottom:10px" class="navbar navbar-inverse navbar-static-top">
 		  <div class="container-fluid">
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
