@@ -28,21 +28,13 @@ class profile
         echo $text;
     }
 
-<<<<<<< HEAD
     function addPost($db, $entry, $id){
 	    $time = date('Y-m-d H:i:s');
-=======
-    function addPost($db, $entry)
-    {
-        $id = $_GET['id'];
-        $time = date('Y-m-d H:i:s');
->>>>>>> ad0afff0dd74171ac26357681479b28c9f0b14fe
         $query = "INSERT INTO posts (post, tStamp, userID) VALUES ('$entry', '$time' , '$id' )";
         mysqli_query($db, $query);
 		header("location: profile.php?id=". $id);
     }
 
-<<<<<<< HEAD
     function getPreviousPostInfo($db){
 	   $posts = [];
 	   $count = 0;
@@ -67,49 +59,9 @@ class profile
 			$text .= '<p class="post-body">'. $post[0] .'</p></div>';
 		}
 		$text .= '</div></div>';
-=======
-    function getPreviousPostInfo($db)
-    {
-        $posts = array();
-        $id = $_GET['id'];
-        $query = "SELECT post, tStamp, userID FROM posts WHERE userID = '$id'";
-        $result = mysqli_query($db, $query);
-        while ($row = mysqli_fetch_assoc($result)) {
-            $text = '<div class="col-xs-12"><h>' . $row['tStamp'] . '</h><h2>' . $row['post'] . '</h2></div>';
-            array_push($posts, $text);
-        }
-        return $posts;
-
-    }
-
-    function generatePreviousPosts($db)
-    {
-        $posts = $this->getPreviousPostInfo($db);
-        $text = ' <div class="container-fluid"><div class="row"><div class="col-xs-12"><h1><u>Posts</u></h1></div>';
-        foreach ($posts as $post) {
-            $text .= $post;
-        }
-        $text .= '</div></div>';
->>>>>>> ad0afff0dd74171ac26357681479b28c9f0b14fe
         echo $text;
     }
-
-
-<<<<<<< HEAD
-    function generateProfile($connect){
-		$profileInfo = $this->getProfileInfo($connect);
-		$img = "/CSE-201-Project-Folder/resources/img/". $profileInfo[5];		
-        $text = '<div class="container-fluid"><div class="row"><div class="col-xs-6"><h2>';
-		$text .= '<img src="'. $img .'" style="width:50%" />';
-        $text .= '<h2>' . $profileInfo[0] . " " . $profileInfo[1] . '</h2>';
-        $text .=  '<p>';
-        $text .= $profileInfo[2];
-        $text .= '</p><p>';
-        $text .= $profileInfo[3];
-        $text .= '</p><p>';
-        $text .= $profileInfo[4];
-        $text .= '</h2></div></div>';
-=======
+	
     function getFriends($connect)
     {
         $profileInfo = $this->getProfileInfo($connect);
@@ -151,7 +103,6 @@ class profile
             $text .= '<form action="profile.php?id='.$id.'"method="post"><input type="button" value="Accept" name="requestButton"> </form></li>';
         }
         $text .= '</ul></div></div>';
->>>>>>> ad0afff0dd74171ac26357681479b28c9f0b14fe
         echo $text;
     }
 
@@ -202,27 +153,27 @@ class profile
     }
 
     function generateProfile($connect){
-            $profileInfo = $this->getProfileInfo($connect);
-            $img = "/CSE-201-Project-Folder/resources/img/" . $profileInfo[5];
-            $text = '<div class="container-fluid"><div class="row"><div class="col-xs-6"><p>';
-            $text .= $this->generateFriendButton($connect) . '</p>';
-            if ($profileInfo[5] == "NULL") {
-                $text .= '<img src="' . $img . '" style="width:50%" /></img>';
-            } else if ($profileInfo[5] != "NULL") {
-                $text .= '<img src="' . $img . '" style="width:50%" /></img>';
-            }
-            $text .= '<h2>' . $profileInfo[0] . " " . $profileInfo[1] . '</h2>';
-            $text .= '<p>';
-            $text .= $profileInfo[2];
-            $text .= '</p><p>';
-            $text .= $profileInfo[3];
-            $text .= '</p><p>';
-            $text .= $profileInfo[4];
-            $text .= '</h2></div></div>';
-            echo $text;
-        }
+		$profileInfo = $this->getProfileInfo($connect);
+		$img = "/CSE-201-Project-Folder/resources/img/" . $profileInfo[5];
+		$text = '<div class="container-fluid"><div class="row"><div class="col-xs-6"><p>';
+		$text .= $this->generateFriendButton($connect) . '</p>';
+		if ($profileInfo[5] == "NULL") {
+			$text .= '<img src="' . $img . '" style="width:50%" /></img>';
+		} else if ($profileInfo[5] != "NULL") {
+			$text .= '<img src="' . $img . '" style="width:50%" /></img>';
+		}
+		$text .= '<h2>' . $profileInfo[0] . " " . $profileInfo[1] . '</h2>';
+		$text .= '<p>';
+		$text .= $profileInfo[2];
+		$text .= '</p><p>';
+		$text .= $profileInfo[3];
+		$text .= '</p><p>';
+		$text .= $profileInfo[4];
+		$text .= '</h2></div></div>';
+		echo $text;
+	}
 
 
-    }
+}
 
 ?>
