@@ -91,7 +91,6 @@ class page {
 		  <div class="container-fluid">
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="navbar-header" id="bs-example-navbar-collapse-1">
 			  <ul class="nav navbar-nav">
 				<li class="dropdown">
 				<li>
@@ -104,11 +103,12 @@ class page {
 				    <input type="search" name="searchEntry" value="" placeholder="Enter a name">
 				    <input type="submit" name="submitEntry" value="Search">
 				    </form></li>
+			  </ul>
+			  <ul class="nav navbar-nav navbar-right">
 				<li>
-				    <a href="/CSE-201-Project-Folder/website/logout.php">Logout</a>
+				    <a style="padding-top:20px; margin-right:15px;" href="/CSE-201-Project-Folder/website/logout.php">Logout</a>
 				    </li>
-				</ul>
-			</div><!-- /.navbar-collapse -->
+			  </ul>
 		  </div><!-- /.container-fluid -->
 		</nav>';
 		echo $text;

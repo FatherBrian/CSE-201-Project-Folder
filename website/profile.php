@@ -22,10 +22,13 @@ session_start();
 
 <?php $profile->getPostSystem(); ?>
 
-<?php if(isset($_POST['submit'])) {
-    $entry = $_POST['posts'];
-    $profile->addPost($connection, $entry);
-      }?>
+<?php 
+	if(isset($_POST['submit'])) {
+		$entry = $_POST['posts'];
+		$id = $_GET["id"];
+		$profile->addPost($connection, $entry, $id);
+	}
+?>
 
 <?php $profile->generatePreviousPosts($connection); ?>
 

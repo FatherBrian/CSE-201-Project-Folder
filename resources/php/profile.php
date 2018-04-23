@@ -26,20 +26,23 @@ class profile {
         echo $text;
     }
 
-    function addPost($db, $entry){
-	    $id = $_GET['id'];
+    function addPost($db, $entry, $id){
 	    $time = date('Y-m-d H:i:s');
         $query = "INSERT INTO posts (post, tStamp, userID) VALUES ('$entry', '$time' , '$id' )";
         mysqli_query($db, $query);
+		header("location: profile.php?id=". $id);
     }
 
     function getPreviousPostInfo($db){
-	   $posts = array();
+	   $posts = [];
+	   $count = 0;
 	   $id = $_GET['id'];
        $query = "SELECT post, tStamp, userID FROM posts WHERE userID = '$id'";
        $result = mysqli_query($db, $query);
        while($row = mysqli_fetch_assoc($result)){
-          array_push($posts, $row['post'] , $row['tStamp']);
+          $posts[$count][0] = $row['post']; 
+          $posts[$count][1] = $row['tStamp'];
+		  $count++;
        }
        return $posts;
 
@@ -47,13 +50,16 @@ class profile {
 
     function generatePreviousPosts($db){
 	    $posts = $this->getPreviousPostInfo($db);
+		$personalInfo = $this->getProfileInfo($db);
         $text =' <div class="container-fluid"><div class="row"><div class="col-xs-12"><h1>Posts</h1></div>';
 		foreach($posts as $post) {
-			$text .= '<div class="col-xs-12"><h3>' . $posts[1] . "</h3><p>" . $posts[0] . "</p></div>";
+			$text .= '<div class="post-container col-xs-12"><h4 class="post-head"><a href="">'. $personalInfo[0] .' '. $personalInfo[1] .'</a> posted on '. date("M jS, Y", strtotime($post[1])) .':</h4>';
+			$text .= '<p class="post-body">'. $post[0] .'</p></div>';
 		}
 		$text .= '</div></div>';
         echo $text;
     }
+
 
     function generateProfile($connect){
 		$profileInfo = $this->getProfileInfo($connect);
