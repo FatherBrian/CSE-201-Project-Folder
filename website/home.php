@@ -24,9 +24,7 @@
 
 <?php $gen->nav(); ?>
 
-
-
-<?php // ?>
+<?php $home->makeHomePage($message, $connection); ?>
 
 <?php $gen->footer(); ?>
 

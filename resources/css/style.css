@@ -10,13 +10,14 @@ html, body {
     height : 100%;
 }
 
-.infoBox{
-	display:none;
+.loginForm .field { 
+	margin-bottom: 20px;
+	display: block;
 }
 
-.post-container {
-	margin-bottom:20px;
-}
+.infoBox{ display:none; }
+
+.post-container { margin-bottom:20px; }
 
 #overlay-back {
     position   : absolute;
@@ -44,24 +45,19 @@ html, body {
 	display: none;
 	list-style-type: none;
 }
-.item {
-	list-style-type: none;
-}
-.requiredText {
-	color: goldenrod;
-}
-.finishedText {
-	color: Blue;
-}
-.missedText {
-	color: Red;
-}
-.excusedText {
-	color: rgb(33,108,42);
-}
-.extraText {
-	color: #DF3D82;
-}
+
+.item { list-style-type: none; }
+
+.requiredText { color: goldenrod; }
+
+.finishedText { color: Blue; }
+
+.missedText { color: Red; }
+
+.excusedText { color: rgb(33,108,42); }
+
+.extraText { color: #DF3D82; }
+
 .addFriendButton {
 	background-color:#63ffa9;
 	padding:10px;
