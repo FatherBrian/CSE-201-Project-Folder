@@ -25,7 +25,7 @@ class page {
 	}	
 	
 	function getProfilePic($db) {
-	    $query = "Select * From user Where userID = " . $_SESSION["userID"];
+	    $query = "Select * From users Where userID = " . $_SESSION["userID"];
 	    $result = mysqli_query($db, $query);
 
 	    if(mysqli_num_rows($result) > 0) {

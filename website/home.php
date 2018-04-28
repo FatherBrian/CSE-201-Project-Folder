@@ -15,16 +15,15 @@
 
 <?php
 	if(isset($_GET['register'])=='success') {
-		$message = "<h1>Account was registered successfully!</h1>";
-	} else { $message = ''; }
-	$home->generateHomePage($message);
+		$message = '<div class="container-fluid"><div class="row"><div class="col-xs-12"><h1>Account was registered successfully!</h1></div></div></div>';
+	} else { $message = NULL; }
 ?>
 
 <?php $gen->title(); ?>
 
 <?php $gen->nav(); ?>
 
-<?php $home->makeHomePage($message, $connection); ?>
+<?php $home->generateHomePage($message, $connection, $server); ?>
 
 <?php $gen->footer(); ?>
 
