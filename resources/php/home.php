@@ -1,78 +1,32 @@
 <?php
 class home {
 
-	function generateHomePage($message, $connection, $db) {
+	function generateHomePage($message, $connection, $db, $poster) {
 		$text = "";
 		if ($message != NULL) { $text .= $message; }
-		$text .= '<div class="container-fluid"><div class="row"><div class="col-xs-6">';
-		$data = $this->getPosts($connection, $db);
+		$text .= '<div class="container-fluid"><div class="row">';
+		$data = $this->getPosts($connection, $db, $poster);
 		$text .= $this->displayUserGroupPosts($data, $connection, $db);
 		$text .= $this->displayUserFriendPosts($data, $connection, $db);
-		// $text .= '</div></div>';
-		// echo $text;
+		$text .= '</div></div>';
+		echo $text;
 	}
 	
-	function getPosts($connection, $db) {
+	function getPosts($connection, $db, $poster) {
+		$id = $_SESSION['userID'];
 		$data = array();
+		
 		$ids = $db->getConnections($connection);
-		$posts = $this->getUserPosts($connection, $ids);
-		$groups = $this->getPostedGroups($connection, $posts, $db);
-		$users = $this->getPostingUsers($connection, $posts, $db);
+		$posts = $poster->getUserPosts($connection, $ids, $id);
+		$groups = $poster->getPostedGroups($connection, $posts, $db);
+		$users = $poster->getPostingUsers($connection, $posts, $db);
 		$temp = array("postArray"=>$posts, "groupArray"=>$groups, "userArray"=>$users);
 		array_push($data, $temp);
 		return $data;
 	}
-
-	function getUserPosts($connection, $idList) {
-		$names = "";
-		foreach($idList as $id) { $names .= "(partyID = '". $id["partyID"] ."' and partyTypeID = '". $id["partyTypeID"] ."') or ";	}
-	
-		$id = $_SESSION['userID'];
-        $query = "SELECT * FROM post WHERE ". substr($names, 0, -4) ." or partyID = ". $id;
-		// echo $query;
-        $result = mysqli_query($connection, $query);
-
-        if (mysqli_num_rows($result) > 0) {
-			$posts = array();
-            while ($row = mysqli_fetch_assoc($result)) {
-				$temp = array("post"=>$row["post"], "tStamp"=>$row["tStamp"]);
-				$temp2 = array("partyID"=>$row["partyID"], "partyTypeID"=>$row["partyTypeID"], "postPartyID"=>$row["postPartyID"]);
-				$temp3 = array("Posts"=>$temp, "IDs"=>$temp2);
-				array_push($posts, $temp3);
-			}
-		} else { $data = NULL; }
-		return $posts;
-	}
-	
-	function getPostedGroups($connection, $posts, $db) {
-		$groupIDs = array();
-		$id = $_SESSION['userID'];		
-		foreach($posts as $post) {
-			if ($post["IDs"]["partyID"] != $id and $post["IDs"]["partyID"] == 2) {
-				array_push($groupIDs, $post["IDs"]["partyID"]);
-			}
-		}
-		$groupIDs =array_unique($groupIDs);
-		// print_r($groupIDs);
-		$groupInfo = $db->getGroupInfo($connection, $groupIDs);	
-		return($groupInfo);
-	}
-	
-	function getPostingUsers($connection, $posts, $db) {
-		$userIDs = array();
-		$id = $_SESSION['userID'];		
-		foreach($posts as $post) {
-			array_push($userIDs, $post["IDs"]["postPartyID"]);
-		}
-		array_push($userIDs, $id);
-		$userIDs =array_unique($userIDs);
-		$userInfo = $db->getUserInfo($connection, $userIDs);	
-		return $userInfo;
-		
-	}
 	
 	function displayUserGroupPosts($data, $connection, $db) {
-		$text = '</div><div class="col-xs-6"><h1> Group Posts:</h1>';
+		$text = '<div class="col-xs-6"><h1> Group Posts:</h1>';
 		$id = $_SESSION['userID'];		
 		foreach($data[0]["postArray"] as $row) {
 			if ($row["IDs"]["partyTypeID"] == 2) {
@@ -87,12 +41,12 @@ class home {
 			}
 		}
 		if (!$postFound) { $text = '</div><div class="col-xs-6"><h1> No group posts found </h2>'; }
-		echo $text;
+		$text .= '</div>';
 		return $text;
 	}
 
 	function displayUserFriendPosts($data, $connection, $db) {
-		$text = '</div><div class="col-xs-6"><h1> Friend Posts:</h1>';
+		$text = '<div class="col-xs-6"><h1> Friend Posts:</h1>';
 		$id = $_SESSION['userID'];
 		foreach($data[0]["postArray"] as $row) {
 			if ($row["IDs"]["partyTypeID"] == 1) {
@@ -111,7 +65,7 @@ class home {
 			}
 		}
 		if (!$postFound) { $text = '</div><div class="col-xs-6"><h1> No friend posts found </h2>'; }
-		echo "<br><br><br>". $text;
+		$text .= '</div>';
 		return $text;
 	}
 	

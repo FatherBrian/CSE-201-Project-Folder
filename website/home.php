@@ -3,12 +3,15 @@
 	$db = "../resources/php/database.php";
 	$page = "../resources/php/page.php";
 	$home = "../resources/php/home.php";
+	$poster = "../resources/php/post.php";
 	include($db);
 	include($page);
 	include($home);
+	include($poster);
 	$server = new database();
 	$gen = new page();
 	$home = new home();
+	$poster = new post();
 	$gen->head();
 	$connection = $server->connect();
 ?>
@@ -23,7 +26,7 @@
 
 <?php $gen->nav(); ?>
 
-<?php $home->generateHomePage($message, $connection, $server); ?>
+<?php $home->generateHomePage($message, $connection, $server, $poster); ?>
 
 <?php $gen->footer(); ?>
 
