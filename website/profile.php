@@ -4,12 +4,15 @@ session_start();
 	$db = "../resources/php/database.php";
 	$page = "../resources/php/page.php";
 	$profile = "../resources/php/profile.php";
+	$poster = "../resources/php/post.php";
 	include($db);
 	include($page);
 	include($profile);
+	include($poster);
 	$server = new database();
 	$gen = new page();
 	$profile = new profile();
+	$poster = new post();
 	$gen->head();
 	$connection = $server->connect();
 ?>
@@ -38,26 +41,22 @@ session_start();
 
 <!--- <?php $profile->getFriendRequests($connection); ?> --->
 
-<?php $profile->generateProfile($connection); ?>
-
-<?php $profile->getPostSystem(); ?>
-
 <?php 
-	if(isset($_POST['submit'])) {
-		$entry = $_POST['posts'];
-		$id = $_GET["id"];
-		$postId = $_SESSION["userID"];
-		$profile->addPost($connection, $entry, $id, $postId);
-	}
+	// if(isset($_POST['submit'])) {
+		// $entry = $_POST['posts'];
+		// $id = $_GET["id"];
+		// $postId = $_SESSION["userID"];
+		// $profile->addPost($connection, $entry, $id, $postId);
+	// }
 ?>
 
 <?php
-    if(isset($_POST['addFriend'])) {
-        $profile->requestFriend($connection);
-    }
+    // if(isset($_POST['addFriend'])) {
+        // $profile->requestFriend($connection);
+    // }
 ?>
 
-<?php $profile->generatePreviousPosts($connection); ?>
+<?php $profile->generateProfilePage($connection, $server, $poster); ?>
 
 <?php $gen->footer(); ?>
 

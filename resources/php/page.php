@@ -30,7 +30,9 @@ class page {
 
 	    if(mysqli_num_rows($result) > 0) {
 	        $row = mysqli_fetch_assoc($result);
-			$img = "/CSE-201-Project-Folder/resources/img/". $row["srcImg"];
+			if ($row["srcImg"] == NULL) { $img = "basic.png"; }
+			else { $img = $row["srcImg"]; }
+			$img = "/CSE-201-Project-Folder/resources/img/". $img;
 			return $img;
 	    }
 	}
@@ -105,9 +107,9 @@ class page {
 				    </form></li>
 			  </ul>
 			  <ul class="nav navbar-nav navbar-right">
-				<li>
-				    <a style="padding-top:20px; margin-right:15px;" href="/CSE-201-Project-Folder/website/logout.php">Logout</a>
-				    </li>
+				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/requests.php">Requests</a></li>
+				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/connections.php">Connections</a></li>
+				<li><a style="padding-top:20px; margin-right:15px;" href="/CSE-201-Project-Folder/website/logout.php">Logout</a></li>
 			  </ul>
 		  </div><!-- /.container-fluid -->
 		</nav>';

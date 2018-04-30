@@ -2,17 +2,82 @@
 class profile
 {
 
-    function getProfileInfo($db)
-    {
+	// New Functions
+	function generateProfilePage($connection, $db, $poster) { 
+		$text = "";
+		// if ($message != NULL) { $text .= $message; }
+		$text .= '<div class="container-fluid"><div class="row">';
+		$data = $this->getPosts($connection, $db, $poster);
+		$text .= $this->generateProfile($connection);
+		$text .= $this->displayUserFriendPosts($data, $connection, $db);
+		$text .= $poster->getPostSystem("profile");
+		$text .= '</div></div>';
+		echo $text;
+	}
+	
+	function getPosts($connection, $db, $poster) {
+		$id = $_GET['id'];
+		$data = array();
+		
+		$ids = $db->getConnections($connection, $id);
+		$posts = $poster->getUserPosts($connection, $ids, $id);
+		$users = $poster->getPostingUsers($connection, $posts, $db);
+		$temp = array("postArray"=>$posts, "userArray"=>$users);
+		array_push($data, $temp);
+		return $data;
+	}		
+
+	function displayUserFriendPosts($data, $connection, $db) {
+		$text = '<div class="col-xs-6"><h1> Friend Posts:</h1>';
+		$id = $_SESSION['userID'];
+		foreach($data[0]["postArray"] as $row) {
+			if ($row["IDs"]["partyTypeID"] == 1) {
+				$userRow1 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["postPartyID"], "id");
+				$userRow2 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["partyID"], "id");
+				$postFound = True;
+				$date = date("M jS Y, H:i a", strtotime($row["Posts"]["tStamp"]));
+				$posterUserName = $userRow1["fName"]. " " .$userRow1["lName"];
+				$posteeUserName = $userRow2["fName"]. " " .$userRow2["lName"];
+				$text .= '<h4 class="postHead"><a href="profile.php?id='. $userRow1["id"] .'">'. $posterUserName .'</a>'; 
+				$text .= ' posted on <a href="profile.php?id='. $userRow2["id"] .'">'. $posteeUserName .'</a> wall at '. $date .':</h4>';
+				$text .= '<div class="postBody"><p>'. $row["Posts"]["post"] .'</p></div>';
+			}
+		}
+		if (!$postFound) { $text = '</div><div class="col-xs-6"><h1> No friend posts found </h2>'; }
+		return $text;
+	}
+
+	// Old Functions
+    function generateProfile($connect){
+		$profileInfo = $this->getProfileInfo($connect);
+		$img = "/CSE-201-Project-Folder/resources/img/" . $profileInfo[5];
+		$text = '<div class="container-fluid"><div class="row"><div class="col-xs-6">';
+		if ($profileInfo[5] == "NULL") {
+			$text .= '<img src="' . $img . '" style="width:50%" /></img>';
+		} else if ($profileInfo[5] != "NULL") {
+			$text .= '<img src="' . $img . '" style="width:50%" /></img>';
+		}
+		$text .= '<h2>' . $profileInfo[0] . " " . $profileInfo[1] . '</h2>';
+		$text .= '<div class="profileInfo"><p>'. $profileInfo[2] .'</p>';
+		$text .= '<p>'. $profileInfo[3] .'</p>';
+		$text .= '<p>'. $profileInfo[4] .'</p></div>';
+		// $text .= $this->generateFriendButton($connect); 	
+		$text .= '</div>';
+		return $text;
+	}
+
+	function getProfileInfo($db) {
         $profileInfo = array();
 
-        $query = "Select * From user Where userID = " . $_GET["id"];
+        $query = "Select * From users Where userID = " . $_GET["id"];
         $result = mysqli_query($db, $query);
 
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $date = date("D, M d, Y", strtotime($row["bDate"]));
-                array_push($profileInfo, $row["fName"], $row["lName"], $date, $row["college"], $row["country"], $row["srcImg"], $row["userID"]);
+				$img = $row["srcImg"];
+				if ($img == NULL) { $img = "basic.png"; }
+                array_push($profileInfo, $row["fName"], $row["lName"], $date, $row["collegeID"], $row["country"], $img, $row["userID"]);
             }
         }
         return $profileInfo;
@@ -28,16 +93,6 @@ class profile
 		}
 	}
 	
-    function getPostSystem()
-    {
-        $text = ' <div class="container-fluid"><div class="row"><div class="col-l-300">
-                  <form action="profile.php?id=' . $_GET['id'] . '" style="padding-top:20px;" method="post">
-				  <textarea id="posts" name="posts"></textarea>
-				  <input type="submit" name="submit" value="Post Status">
-				  </form></div></div>';
-        echo $text;
-    }
-
     function addPost($db, $entry, $id, $postId){
 	    $time = date('Y-m-d H:i:s');
         $query = "INSERT INTO posts (post, tStamp, userID, postUserID) VALUES ('$entry', '$time' , '$id', '$postId')";
@@ -60,26 +115,27 @@ class profile
 
     }
 
-    function generatePreviousPosts($db){
-	    $posts = $this->getPreviousPostInfo($db);
-		$personalInfo = $this->getProfileInfo($db);
-        $text =' <div class="container-fluid"><div class="row"><div class="col-xs-12"><h1>Posts</h1></div>';
-		foreach($posts as $post) {
-			$name = $this->getName($db, $post[2]);
-			$text .= '<div class="post-container col-xs-12"><h4 class="post-head"><a href="profile.php?id='. $post[2] .'">'. $name .'</a> posted on '. date("M jS, Y", strtotime($post[1])) .':</h4>';
-			$text .= '<p class="post-body">'. $post[0] .'</p></div>';
-		}
-		$text .= '</div></div>';
-        echo $text;
-    }
+    // function generatePreviousPosts($db){
+	    // $posts = $this->getPreviousPostInfo($db);
+		// $personalInfo = $this->getProfileInfo($db);
+        // $text =' <div class="container-fluid"><div class="row"><div class="col-xs-12"><h1>Posts</h1></div>';
+		// foreach($posts as $post) {
+			// $name = $this->getName($db, $post[2]);
+			// $text .= '<div class="post-container col-xs-12"><h4 class="post-head"><a href="profile.php?id='. $post[2] .'">'. $name .'</a> posted on '. date("M jS, Y", strtotime($post[1])) .':</h4>';
+			// $text .= '<p class="post-body">'. $post[0] .'</p></div>';
+		// }
+		// $text .= '</div></div>';
+        // echo $text;
+    // }
 	
     function getFriends($connect)
     {
         $profileInfo = $this->getProfileInfo($connect);
         $id = $_SESSION['userID'];
-        $query = "SELECT * FROM friends WHERE (userID1 = '$profileInfo[5]' AND userID2 = '$id') OR (userID2 = '$profileInfo[5]' AND userID1 = '$id')";
+        $query = "SELECT * FROM connections WHERE (otherID = '$profileInfo[6]' AND userID = '$id' AND otherPartyTypeID = 1)";
         $result = mysqli_query($connect, $query);
         $friends = array();
+
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
                 if ($row['userID1'] == $profileInfo[5])
@@ -199,29 +255,6 @@ class profile
 		}
         return $text;
     }
-
-    function generateProfile($connect){
-		$profileInfo = $this->getProfileInfo($connect);
-		$img = "/CSE-201-Project-Folder/resources/img/" . $profileInfo[5];
-		$text = '<div class="container-fluid"><div class="row"><div class="col-xs-9">';
-		if ($profileInfo[5] == "NULL") {
-			$text .= '<img src="' . $img . '" style="width:50%" /></img>';
-		} else if ($profileInfo[5] != "NULL") {
-			$text .= '<img src="' . $img . '" style="width:50%" /></img>';
-		}
-		$text .= '<h2>' . $profileInfo[0] . " " . $profileInfo[1] . '</h2>';
-		$text .= '<p>';
-		$text .= $profileInfo[2];
-		$text .= '</p><p>';
-		$text .= $profileInfo[3];
-		$text .= '</p><p>';
-		$text .= $profileInfo[4];
-		$text .= '</h2></div>';
-		$text .= $this->generateFriendButton($connect);
-		$text .= '</div>';
-		echo $text;
-	}
-
 
 }
 

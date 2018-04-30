@@ -58,6 +58,10 @@ html, body {
 
 .extraText { color: #DF3D82; }
 
+.connectionsList { list-style-type: none; }
+
+.requestsList { list-style-type: none; }
+
 .addFriendButton {
 	background-color:#63ffa9;
 	padding:10px;

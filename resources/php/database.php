@@ -29,10 +29,28 @@ class database {
 	
 	
 	// Common DB call functions
+	function getRequests($connection, $id) {
+        $requests = array();
+		
+		$query = "Select * From request Where requesterID = '$id' Or requesteeID = '$id'";
+        $result = mysqli_query($connection, $query);
+
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+				if ($row["requesterID"] = $id) { $type = "sent"; }
+				else { $type = "recieved"; }
+				$temp = array("requesterID"=>$row["requesterID"], "requesteeID"=>$row["requesteeID"], "requesteePartyTypeID"=>$row["requesteePartyTypeID"], "type"=>$type);
+				array_push($requests, $temp);
+			}
+		}
+		return $requests;
+	}
+
 	function getGroupInfo($connection, $idList) { // For [See posts, View members
         $groups = array();
 		$names = "";
-		foreach($idList as $id) { $names .= "'". $id ."',";	}
+		foreach($idList as $id) { $names .= "'". $id ."',"; }
+
 		$query = "Select * From groups Where groupID IN (". substr($names, 0, -1) .")";
         $result = mysqli_query($connection, $query);
 		
@@ -42,18 +60,17 @@ class database {
 				array_push($groups, $temp);
 			}
 		}
-		// print_r($groups);
 		return $groups;
 	}
 
 	function getUserInfo($connection, $idList) { // For [See posts, View members
-        $friends = array();
+		$friends = array();
 		$names = "";
-		foreach($idList as $id) { $names .= "'". $id ."',";	}
+		foreach($idList as $id) { $names .= "'". $id ."',"; }
 		
 		$query = "Select * From users Where userID IN (". substr($names, 0, -1) .")";
         $result = mysqli_query($connection, $query);
-
+		
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
 				$temp = array("id"=>$row["userID"], "fName"=>$row["fName"], "lName"=>$row["lName"], "bDate"=>$row["bDate"], "collegeID"=>$row["collegeID"], "country"=>$row["country"], "email"=>$row["email"], "srcImg"=>$row["srcImg"]);
@@ -78,19 +95,15 @@ class database {
 		return $college;
 	}
 	
-	function getConnections($connection) {
-		$id = $_SESSION['userID'];
+	function getConnections($connection, $id) {
         $connections = array();
 		
-		$query = "Select * From connections Where connectionID1 = '$id' Or connectionID2 = '$id' ";
-		// echo $query. "<br>";
+		$query = "Select * From connections Where userID = '$id'";
         $result = mysqli_query($connection, $query);
 
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
-				if ($row["connectionID1"] != $id) { $otherID = $row["connectionID1"]; }
-				else { $otherID = $row["connectionID2"]; }
-				$temp = array("partyID"=>$otherID, "partyTypeID"=>$row["partyTypeID"]);
+				$temp = array("partyID"=>$row["otherID"], "partyTypeID"=>$row["otherPartyTypeID"]);
 				array_push($connections, $temp);
 			}
 		}

@@ -73,13 +73,15 @@ CREATE TABLE comment(
 CREATE TABLE request(
 	requesterID int (9),
 	requesteeID int (9),
+	requesteePartyTypeID int (2)
 	PRIMARY KEY(requesterID, requesteeID)
+	FOREIGN KEY(requesteePartyTypeID) references partyType(partyTypeID)
 ) ENGINE=InnoDB;
 
 CREATE TABLE connections(
-	connectionID1 int (9),
-	connectionID2 int (9),
-	partyTypeID int (2),
+	userID int (9),
+	otherID int (9),
+	otherPartyTypeID int (2),
 	PRIMARY KEY(connectionID1, connectionID2, partyTypeID),
 	FOREIGN KEY(partyTypeID) references partyType(partyTypeID)
 ) ENGINE=InnoDB;
@@ -110,17 +112,24 @@ INSERT INTO `groups` (`groupID`, `name`, `description`, `srcImg`, `managerID`) V
 INSERT INTO `groups` (`groupID`, `name`, `description`, `srcImg`, `managerID`) VALUES ('4', 'Healthy Living', 'We want all of our members to talk about how to live more healthy lives on college campuses', NULL, '3');
 
 
-INSERT INTO `connections` (`connectionID1`, `connectionID2`, `partyTypeID`) VALUES ('1', '2', '1');
-INSERT INTO `connections` (`connectionID1`, `connectionID2`, `partyTypeID`) VALUES ('1', '4', '1');
-INSERT INTO `connections` (`connectionID1`, `connectionID2`, `partyTypeID`) VALUES ('1', '2', '2');
-INSERT INTO `connections` (`connectionID1`, `connectionID2`, `partyTypeID`) VALUES ('1', '3', '2');
-INSERT INTO `connections` (`connectionID1`, `connectionID2`, `partyTypeID`) VALUES ('1', '1', '3');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '2', '1');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '4', '1');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '2', '2');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '3', '2');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '1', '3');
 
-INSERT INTO `connections` (`connectionID1`, `connectionID2`, `partyTypeID`) VALUES ('6', '2', '2');
-INSERT INTO `connections` (`connectionID1`, `connectionID2`, `partyTypeID`) VALUES ('8', '2', '2');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('6', '2', '2');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('8', '2', '2');
 
 INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postPartyID`) VALUES ('1', 'I am excited to have joined the group. What type of music do you guys like?', '2018-04-27', '2', '2', '3');
 INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postPartyID`) VALUES ('2', 'I\'m excited to see what comes up in this group!', '2018-04-27 07:20:17', '2', '2', '6');
 INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postPartyID`) VALUES ('3', 'This group looks awesome, I love music!', '2018-04-27 08:17:29', '2', '2', '8');
 INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postPartyID`) VALUES ('4', 'Hey man, pumped that you\'re on college book now!', '2018-04-27 08:33:19', '1', '1', '10');
 INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postPartyID`) VALUES ('5', 'Hey Nick! You should learn more about healthy living, it seems like a cool page', '2018-04-27 06:22:17', '1', '1', '4');
+
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '2', '1');
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '4', '1');
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '1', '2');
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '3', '2');
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('6', '1', '1');
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('7', '1', '1');

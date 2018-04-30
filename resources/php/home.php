@@ -16,7 +16,7 @@ class home {
 		$id = $_SESSION['userID'];
 		$data = array();
 		
-		$ids = $db->getConnections($connection);
+		$ids = $db->getConnections($connection, $id);
 		$posts = $poster->getUserPosts($connection, $ids, $id);
 		$groups = $poster->getPostedGroups($connection, $posts, $db);
 		$users = $poster->getPostingUsers($connection, $posts, $db);
@@ -50,11 +50,8 @@ class home {
 		$id = $_SESSION['userID'];
 		foreach($data[0]["postArray"] as $row) {
 			if ($row["IDs"]["partyTypeID"] == 1) {
-				// print_r($data[0]["userArray"]);
-				// print_r($row);
 				$userRow1 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["postPartyID"], "id");
 				$userRow2 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["partyID"], "id");
-				// print_r($data[0]);
 				$postFound = True;
 				$date = date("M jS Y, H:i a", strtotime($row["Posts"]["tStamp"]));
 				$posterUserName = $userRow1["fName"]. " " .$userRow1["lName"];
