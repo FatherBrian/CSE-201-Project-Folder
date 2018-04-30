@@ -37,8 +37,6 @@ session_start();
 
 <?php $gen->nav(); ?>
 
-<?php $profile->getFriends($connection); ?>
-
 <!--- <?php $profile->getFriendRequests($connection); ?> --->
 
 <?php 

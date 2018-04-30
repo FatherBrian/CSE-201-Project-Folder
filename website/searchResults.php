@@ -24,12 +24,12 @@
 
 <?php $gen->nav(); ?>
 <?php
-    if(isset($_POST['submitEntry'])){
-        $formData = $_POST['searchEntry'];
-    }
-
+    if(isset($_POST['submitEntry']))$formData = $_POST['searchEntry'];
+    else $formData = NULL;
 ?>
-<?php $searchResults->generateResults($connection,$formData); ?>
+
+<?php $searchResults->generateUserResults($connection, $formData); ?>
+<?php // $searchResults->generateGroupResults($connection, $formData); ?>
 
 <?php $gen->footer(); ?>
 </body>

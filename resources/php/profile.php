@@ -7,9 +7,10 @@ class profile
 		$text = "";
 		// if ($message != NULL) { $text .= $message; }
 		$text .= '<div class="container-fluid"><div class="row">';
-		$data = $this->getPosts($connection, $db, $poster);
 		$text .= $this->generateProfile($connection);
-		$text .= $this->displayUserFriendPosts($data, $connection, $db);
+		$data = $this->getPosts($connection, $db, $poster);
+		if ($data != NULL) $text .= $this->displayUserFriendPosts($data, $connection, $db);
+		else $text .= '<div class="col-xs-6"><h1> No friend posts found </h2>';
 		$text .= $poster->getPostSystem("profile");
 		$text .= '</div></div>';
 		echo $text;
@@ -21,33 +22,14 @@ class profile
 		
 		$ids = $db->getConnections($connection, $id);
 		$posts = $poster->getUserPosts($connection, $ids, $id);
-		$users = $poster->getPostingUsers($connection, $posts, $db);
-		$temp = array("postArray"=>$posts, "userArray"=>$users);
-		array_push($data, $temp);
+		if ($posts != NULL) {
+			$users = $poster->getPostingUsers($connection, $posts, $db);
+			$temp = array("postArray"=>$posts, "userArray"=>$users);
+			array_push($data, $temp);
+		} else { $data = NULL; }
 		return $data;
 	}		
 
-	function displayUserFriendPosts($data, $connection, $db) {
-		$text = '<div class="col-xs-6"><h1> Friend Posts:</h1>';
-		$id = $_SESSION['userID'];
-		foreach($data[0]["postArray"] as $row) {
-			if ($row["IDs"]["partyTypeID"] == 1) {
-				$userRow1 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["postPartyID"], "id");
-				$userRow2 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["partyID"], "id");
-				$postFound = True;
-				$date = date("M jS Y, H:i a", strtotime($row["Posts"]["tStamp"]));
-				$posterUserName = $userRow1["fName"]. " " .$userRow1["lName"];
-				$posteeUserName = $userRow2["fName"]. " " .$userRow2["lName"];
-				$text .= '<h4 class="postHead"><a href="profile.php?id='. $userRow1["id"] .'">'. $posterUserName .'</a>'; 
-				$text .= ' posted on <a href="profile.php?id='. $userRow2["id"] .'">'. $posteeUserName .'</a> wall at '. $date .':</h4>';
-				$text .= '<div class="postBody"><p>'. $row["Posts"]["post"] .'</p></div>';
-			}
-		}
-		if (!$postFound) { $text = '</div><div class="col-xs-6"><h1> No friend posts found </h2>'; }
-		return $text;
-	}
-
-	// Old Functions
     function generateProfile($connect){
 		$profileInfo = $this->getProfileInfo($connect);
 		$img = "/CSE-201-Project-Folder/resources/img/" . $profileInfo[5];
@@ -64,7 +46,7 @@ class profile
 		// $text .= $this->generateFriendButton($connect); 	
 		$text .= '</div>';
 		return $text;
-	}
+	}	
 
 	function getProfileInfo($db) {
         $profileInfo = array();
@@ -82,7 +64,29 @@ class profile
         }
         return $profileInfo;
     }
+	
+	function displayUserFriendPosts($data, $connection, $db) {
+		$text = '<div class="col-xs-6"><h1> Friend Posts:</h1>';
+		$id = $_SESSION['userID'];
+		$postFound = False;
+		foreach($data[0]["postArray"] as $row) {
+			if ($row["IDs"]["partyTypeID"] == 1) {
+				$userRow1 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["postPartyID"], "id");
+				$userRow2 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["partyID"], "id");
+				$postFound = True;
+				$date = date("M jS Y, H:i a", strtotime($row["Posts"]["tStamp"]));
+				$posterUserName = $userRow1["fName"]. " " .$userRow1["lName"];
+				$posteeUserName = $userRow2["fName"]. " " .$userRow2["lName"];
+				$text .= '<h4 class="postHead"><a href="profile.php?id='. $userRow1["id"] .'">'. $posterUserName .'</a>'; 
+				$text .= ' posted on <a href="profile.php?id='. $userRow2["id"] .'">'. $posteeUserName .'</a> wall at '. $date .':</h4>';
+				$text .= '<div class="postBody"><p>'. $row["Posts"]["post"] .'</p></div>';
+			}
+		}
+		if (!$postFound) { $text = '<div class="col-xs-6"><h1> No friend posts found </h2>'; }
+		return $text;
+	}
 
+	// Old Functions
     function getName($db, $id) {
         $query = "Select * From user Where userID = " . $id;
         $result = mysqli_query($db, $query);

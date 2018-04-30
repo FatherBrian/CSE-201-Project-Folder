@@ -5,7 +5,8 @@ class post {
 		$names = "";
 		foreach($idList as $aID) { $names .= "(partyID = '". $aID["partyID"] ."' and partyTypeID = '". $aID["partyTypeID"] ."') or ";	}
 		
-        $query = "SELECT * FROM post WHERE ". substr($names, 0, -4) ." or partyID = ". $id;
+		if ($names == NULL) $query = "SELECT * FROM post WHERE partyID = ". $id;
+        else $query = "SELECT * FROM post WHERE ". substr($names, 0, -4) ." or partyID = ". $id;
         $result = mysqli_query($connection, $query);
 
         if (mysqli_num_rows($result) > 0) {
@@ -16,7 +17,7 @@ class post {
 				$temp3 = array("Posts"=>$temp, "IDs"=>$temp2);
 				array_push($posts, $temp3);
 			}
-		} else { $data = NULL; }
+		} else { $posts = NULL; }
 		return $posts;
 	}
 	
@@ -55,7 +56,7 @@ class post {
 	
 	function getPostingUsers($connection, $posts, $db) {
 		$userIDs = array();
-		$id = $_SESSION['userID'];		
+		$id = $_SESSION['userID'];
 		foreach($posts as $post) {
 			array_push($userIDs, $post["IDs"]["postPartyID"]);
 		}
