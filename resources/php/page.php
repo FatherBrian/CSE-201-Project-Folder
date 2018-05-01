@@ -93,6 +93,7 @@ class page {
 		$text = $this->displayPicture($connection, $type);
 		if ($text == NULL) {
 			$status = $this->getConnectionStatus($connection, $id, $profileType);
+			// $text .= $this->displayMemberRequests($connection)
 			$text .= $this->displayStatus($status, $id, $type);
 		}
         return $text;
