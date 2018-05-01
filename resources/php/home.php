@@ -19,7 +19,7 @@ class home {
 		$ids = $db->getConnections($connection, $id);
 		$posts = $poster->getUserPosts($connection, $ids, $id);
 		$groups = $poster->getPostedGroups($connection, $posts, $db);
-		$users = $poster->getPostingUsers($connection, $posts, $db);
+		$users = $poster->getPostingUsers($connection, $posts, $db, $id);
 		$temp = array("postArray"=>$posts, "groupArray"=>$groups, "userArray"=>$users);
 		array_push($data, $temp);
 		return $data;
@@ -27,7 +27,8 @@ class home {
 	
 	function displayUserGroupPosts($data, $connection, $db) {
 		$text = '<div class="col-xs-6"><h1> Group Posts:</h1>';
-		$id = $_SESSION['userID'];		
+		$id = $_SESSION['userID'];
+		$postFound = False;
 		foreach($data[0]["postArray"] as $row) {
 			if ($row["IDs"]["partyTypeID"] == 2) {
 				$groupRow = $db->getIndexRowInfo($data[0]["groupArray"], $row["IDs"]["partyID"], "id");
@@ -46,7 +47,7 @@ class home {
 	}
 
 	function displayUserFriendPosts($data, $connection, $db) {
-		$text = '<div class="col-xs-6"><h1> Friend Posts:</h1>';
+		$text = '<div class="col-xs-6"><h1> Relevant Posts:</h1>';
 		$id = $_SESSION['userID'];
 		foreach($data[0]["postArray"] as $row) {
 			if ($row["IDs"]["partyTypeID"] == 1) {

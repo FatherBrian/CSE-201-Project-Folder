@@ -37,7 +37,7 @@ class database {
 
         if (mysqli_num_rows($result) > 0) {
             while ($row = mysqli_fetch_assoc($result)) {
-				if ($row["requesterID"] = $id) { $type = "sent"; }
+				if ($row["requesterID"] == $id) { $type = "sent"; }
 				else { $type = "recieved"; }
 				$temp = array("requesterID"=>$row["requesterID"], "requesteeID"=>$row["requesteeID"], "requesteePartyTypeID"=>$row["requesteePartyTypeID"], "type"=>$type);
 				array_push($requests, $temp);
@@ -50,6 +50,7 @@ class database {
         $groups = array();
 		$names = "";
 		foreach($idList as $id) { $names .= "'". $id ."',"; }
+		if (count($idList) == 0) $names = "NULLL";
 
 		$query = "Select * From groups Where groupID IN (". substr($names, 0, -1) .")";
         $result = mysqli_query($connection, $query);
@@ -67,7 +68,7 @@ class database {
 		$friends = array();
 		$names = "";
 		foreach($idList as $id) { $names .= "'". $id ."',"; }
-		
+		if (count($idList) == 0) $names = "NULLL";
 		$query = "Select * From users Where userID IN (". substr($names, 0, -1) .")";
         $result = mysqli_query($connection, $query);
 		
@@ -111,6 +112,33 @@ class database {
 		
 	}
 	
+	function getCollege($connection, $id) {
+		$query = "SELECT * FROM college Where collegeID = '$id'";
+		$qResult = mysqli_query($connection, $query);
+		$row = mysqli_fetch_assoc($qResult);
+		return $row["name"];
+	}	
+
+	function getGroup($connection, $id) {
+		$query = "SELECT * FROM groups Where groupID = '$id'";
+		$qResult = mysqli_query($connection, $query);
+		$row = mysqli_fetch_assoc($qResult);
+		return $row;
+	}	
+	
+	function getProfilePic($db) {
+	    $query = "Select * From users Where userID = " . $_SESSION["userID"];
+	    $result = mysqli_query($db, $query);
+
+	    if(mysqli_num_rows($result) > 0) {
+	        $row = mysqli_fetch_assoc($result);
+			if ($row["srcImg"] == NULL) { $img = "basic.png"; }
+			else { $img = $row["srcImg"]; }
+			$img = "/CSE-201-Project-Folder/resources/img/". $img;
+			return $img;
+	    }
+	}
+	
 	// General Functions
 	function getIndexRowInfo($array, $id, $keyName) {
 		foreach($array as $item) {
@@ -118,10 +146,6 @@ class database {
 		}
 		return NULL;
 	}
-	// function hasIds($ids) {
-		// $text = 
-		// return
-	// }
 	
 	// Temp Functions (Move Later)
 	function displayGroupPosts($connection, $db) {

@@ -15,6 +15,19 @@ html, body {
 	display: block;
 }
 
+.profileForm .field {
+	margin-bottom: 20px;
+	display: block;	
+}
+
+input[type=file] {
+	display:inline;
+}
+
+.uploadImg { 
+	margin: 20px 0;
+}
+
 .infoBox{ display:none; }
 
 .post-container { margin-bottom:20px; }
@@ -62,7 +75,7 @@ html, body {
 
 .requestsList { list-style-type: none; }
 
-.addFriendButton {
+.addFriendButton, .buttonDesign1 {
 	background-color:#63ffa9;
 	padding:10px;
     border:2px solid #04cc5d;

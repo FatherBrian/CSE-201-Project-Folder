@@ -17,11 +17,15 @@ session_start();
 	$connection = $server->connect();
 ?>
 
+<?php $gen->processAction($connection, "group"); ?>
+
 <?php $gen->title(); ?>
 
-<?php $gen->nav(); ?>
+<?php $gen->nav($connection, $server); ?>
 
-<?php $group->generateGroupPage($connection, $server, $poster); ?>
+<?php $poster->checkIfPost($connection, 2) ?>
+
+<?php $group->generateGroupPage($connection, $server, $poster, $gen); ?>
 
 <?php $gen->footer(); ?>
 

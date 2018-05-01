@@ -1,16 +1,17 @@
 <?php
-	session_start();
+
+session_start();
 	$db = "../resources/php/database.php";
 	$page = "../resources/php/page.php";
-	$requests = "../resources/php/requests.php";
+	$college = "../resources/php/college.php";
 	$poster = "../resources/php/post.php";
 	include($db);
 	include($page);
-	include($requests);
+	include($college);
 	include($poster);
 	$server = new database();
 	$gen = new page();
-	$requests = new requests();
+	$college = new college();
 	$poster = new post();
 	$gen->head();
 	$connection = $server->connect();
@@ -20,10 +21,11 @@
 
 <?php $gen->nav($connection, $server); ?>
 
-<?php $requests->generateRequests($connection, $server); ?>
+<?php $poster->checkIfPost($connection, 3) ?>
+
+<?php $college->generateCollegePage($connection, $server, $poster); ?>
 
 <?php $gen->footer(); ?>
 
 </body>
 </html>
-

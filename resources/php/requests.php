@@ -33,10 +33,10 @@ class requests {
 		$recieveUserIDs = array();
 		$sentUserIDs = array();
 		$sentGroupIDs = array();
-		
+		$userID = $_SESSION["userID"];
 		foreach($ids as $id) { 
-			if ($id["type"] == "recieved") { array_push($recieveUserIDs, $id["requesterID"]); }
-			else if ($id["type"] == "sent" && $id["requesteePartyTypeID"] == 1) { array_push($sentUserIDs, $id["requesteeID"]); }
+			if ($id["type"] == "recieved" && $id["requesteePartyTypeID"] == 1) { array_push($recieveUserIDs, $id["requesterID"]); }
+			else if ($id["type"] == "sent" && $id["requesteePartyTypeID"] == 1 && $id["requesteeID"] != $userID) { array_push($sentUserIDs, $id["requesteeID"]); }
 			else if ($id["type"] == "sent" && $id["requesteePartyTypeID"] == 2) { array_push($sentGroupIDs, $id["requesteeID"]); }
 		}
 		$temp = array("recieveUserIDs"=>$recieveUserIDs, "sentUserIDs"=>$sentUserIDs, "sentGroupIDs"=>$sentGroupIDs);
@@ -53,8 +53,8 @@ class requests {
 		} else { $text .= '<li> No friend requests have been recieved </li>'; }
 		$text .='</ul>';
 		
+		$text .= '<h1> Sent Friend Requests </h1><ul class="requestsList">';
 		if ($sentUsers != NULL) {
-			$text .= '<h1> Sent Friend Requests </h1><ul class="requestsList">';
 			foreach($sentUsers as $row) {
 				$name = $row["fName"] ." ". $row["lName"];
 				$text .= '<li><a href="profile.php?id='. $row["id"] .'">'. $name .'</a></li>'; 
@@ -65,14 +65,13 @@ class requests {
 	}	
 
 	function displayGroupConnections($groupInfo) {
-		$text = '<div class="col-xs-6"><h1> Requested Groups: </h1>';
+		$text = '<div class="col-xs-6"><h1> Requested Groups </h1><ul class="requestsList">';
 		if ($groupInfo != NULL) {
-			$text .= '<ul class="requestsList">';
 			foreach($groupInfo as $row) {
 				$text .= '<li><a href="group.php?id='. $row["id"] .'">'. $row["name"] .'</a></li>'; 
 			}
-			$text .='</ul>';
-		} else { $text .= '<h2> No group requests have been sent </h2>'; }
+		} else { $text .= '<li> No group requests have been sent </li>'; }
+		$text .='</ul>';
 		return $text;
 	}
 

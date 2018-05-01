@@ -3,11 +3,9 @@ class profile
 {
 
 	// New Functions
-	function generateProfilePage($connection, $db, $poster) { 
-		$text = "";
-		// if ($message != NULL) { $text .= $message; }
-		$text .= '<div class="container-fluid"><div class="row">';
-		$text .= $this->generateProfile($connection);
+	function generateProfilePage($connection, $db, $poster, $page) { 
+		$text = '<div class="container-fluid"><div class="row">';
+		$text .= $this->generateProfile($connection, $db, $page);
 		$data = $this->getPosts($connection, $db, $poster);
 		if ($data != NULL) $text .= $this->displayUserFriendPosts($data, $connection, $db);
 		else $text .= '<div class="col-xs-6"><h1> No friend posts found </h2>';
@@ -23,15 +21,15 @@ class profile
 		$ids = $db->getConnections($connection, $id);
 		$posts = $poster->getUserPosts($connection, $ids, $id);
 		if ($posts != NULL) {
-			$users = $poster->getPostingUsers($connection, $posts, $db);
+			$users = $poster->getPostingUsers($connection, $posts, $db, $id);
 			$temp = array("postArray"=>$posts, "userArray"=>$users);
 			array_push($data, $temp);
 		} else { $data = NULL; }
 		return $data;
 	}		
 
-    function generateProfile($connect){
-		$profileInfo = $this->getProfileInfo($connect);
+    function generateProfile($connection, $db, $page){
+		$profileInfo = $this->getProfileInfo($connection);
 		$img = "/CSE-201-Project-Folder/resources/img/" . $profileInfo[5];
 		$text = '<div class="container-fluid"><div class="row"><div class="col-xs-6">';
 		if ($profileInfo[5] == "NULL") {
@@ -41,9 +39,9 @@ class profile
 		}
 		$text .= '<h2>' . $profileInfo[0] . " " . $profileInfo[1] . '</h2>';
 		$text .= '<div class="profileInfo"><p>'. $profileInfo[2] .'</p>';
-		$text .= '<p>'. $profileInfo[3] .'</p>';
+		$text .= '<p>'. $db->getCollege($connection, $profileInfo[3]) .'</p>';
 		$text .= '<p>'. $profileInfo[4] .'</p></div>';
-		// $text .= $this->generateFriendButton($connect); 	
+		$text .= $page->generateButtons($connection, $page, 1);
 		$text .= '</div>';
 		return $text;
 	}	
@@ -68,9 +66,10 @@ class profile
 	function displayUserFriendPosts($data, $connection, $db) {
 		$text = '<div class="col-xs-6"><h1> Friend Posts:</h1>';
 		$id = $_SESSION['userID'];
+		$profileID = $_GET["id"];
 		$postFound = False;
 		foreach($data[0]["postArray"] as $row) {
-			if ($row["IDs"]["partyTypeID"] == 1) {
+			if ($row["IDs"]["partyTypeID"] == 1 && $row["IDs"]["partyID"] == $profileID) {
 				$userRow1 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["postPartyID"], "id");
 				$userRow2 = $db->getIndexRowInfo($data[0]["userArray"], $row["IDs"]["partyID"], "id");
 				$postFound = True;
@@ -85,7 +84,7 @@ class profile
 		if (!$postFound) { $text = '<div class="col-xs-6"><h1> No friend posts found </h2>'; }
 		return $text;
 	}
-
+		
 	// Old Functions
     function getName($db, $id) {
         $query = "Select * From user Where userID = " . $id;
@@ -97,11 +96,6 @@ class profile
 		}
 	}
 	
-    function addPost($db, $entry, $id, $postId){
-	    $time = date('Y-m-d H:i:s');
-        $query = "INSERT INTO posts (post, tStamp, userID, postUserID) VALUES ('$entry', '$time' , '$id', '$postId')";
-        mysqli_query($db, $query);
-    }
 
     function getPreviousPostInfo($db){
 	   $posts = [];
@@ -175,89 +169,6 @@ class profile
         }
         $text .= '</ul></div></div>';
         echo $text;
-    }
-
-    function acceptFriend($connect){
-        $id = $_SESSION['userID'];
-		$otherID = $_GET['id'];
-
-        $query = "INSERT INTO friends(userID1, userID2) VALUES ('$id', '$otherID')";
-        mysqli_query($connect, $query);
-
-        $query = "DELETE FROM requests WHERE (requesterID = '$otherID' and requesteeID = '$id')";
-        mysqli_query($connect, $query);
-		
-		header ("location: profile.php?id=". $otherID);
-    }
-
-    function deleteFriend($connect){
-        $id = $_SESSION['userID'];
-		$otherID = $_GET['id'];
-
-        $query = "DELETE FROM friends WHERE (userID1 = '$id' and userID2 = '$otherID') or (userID2 = '$id' and userID1 = '$otherID')";
-        mysqli_query($connect, $query);
-		header ("location: profile.php?id=". $otherID);
-	}
-	
-    function sendRequestFriend($connect){
-        $id = $_SESSION['userID'];
-		$otherID = $_GET['id'];
-
-        $query = "INSERT INTO requests(requesterID, requesteeID) VALUES ('$id', '$otherID')";
-        mysqli_query($connect, $query);
-		header ("location: profile.php?id=". $otherID);
-    }
-
-    function removeRequestFriend($connect){
-        $id = $_SESSION['userID'];
-		$otherID = $_GET['id'];
-
-        $query = "DELETE FROM requests WHERE requesterID = '$id' and requesteeID = '$otherID'";
-        mysqli_query($connect, $query);
-		header ("location: profile.php?id=". $otherID);
-    }
-	
-	
-	function getButtonStatus($connect, $otherID) {
-        $profileInfo = $this->getProfileInfo($connect);
-        $id = $_SESSION['userID'];
-		if ($id == $otherID) { return "Same person"; }
-        $query = "SELECT * FROM friends WHERE (userID1 = '$otherID' AND userID2 = '$id') OR (userID2 = '$otherID' AND userID1 = '$id')";
-        $result = mysqli_query($connect, $query);
-        if(mysqli_num_rows($result) > 0){
-            return "Friend";
-        } else {
-			$query2 = "SELECT * FROM requests WHERE (requesterID = '$id' AND requesteeID = '$otherID')";
-			$result2 = mysqli_query($connect, $query2);
-			if(mysqli_num_rows($result2) > 0) { return "Sent Request"; } 
-			$query3 = "SELECT * FROM requests WHERE (requesterID = '$otherID' AND requesteeID = '$id')";
-			$result3 = mysqli_query($connect, $query3);
-			if(mysqli_num_rows($result3) > 0) { return "Recieved Request"; } 			
-			else { return "No Sent Request"; }
-		}
-	}
-	
-    function generateFriendButton($connect){
-        $text = '';
-        $friendStatus = $this->getButtonStatus($connect, $_GET['id']);
-        if($friendStatus == "Friend") {
-			$text .= '<div class="col-xs-3">';
-            $text .= '<form action="?action=deleteFriend&id='.$_GET['id'].'" method="post">';
-			$text .= '<input class="addFriendButton" type="submit" value="Delete Friend" name="addFriend"></form></div>';
-        } else if ($friendStatus == "Sent Request") {
-			$text .= '<div class="col-xs-3">';
-            $text .= '<form action="?action=removeFriendRequest&id='.$_GET['id'].'" method="post">';
-			$text .= '<input class="addFriendButton" type="submit" value="Remove Friend Request" name="addFriend"></form></div>';
-		} else if ($friendStatus == "No Sent Request") {
-			$text .= '<div class="col-xs-3">';
-            $text .= '<form action="?action=sendFriendRequest&id='.$_GET['id'].'" method="post">';
-			$text .= '<input class="addFriendButton" type="submit" value="Send Friend Request" name="addFriend"></form></div>';			
-		} else if ($friendStatus == "Recieved Request") {
-			$text .= '<div class="col-xs-3">';
-            $text .= '<form action="?action=addFriend&id='.$_GET['id'].'" method="post">';
-			$text .= '<input class="addFriendButton" type="submit" value="Accept Friend Request" name="addFriend"></form></div>';			
-		}
-        return $text;
     }
 
 }

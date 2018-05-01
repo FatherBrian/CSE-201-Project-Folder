@@ -45,11 +45,12 @@ class login {
 	function userLogin($db) {
 		$email = $_POST["email"];
 		$password = $_POST["password"];
-	    $query = "Select userID From users Where email ='$email' and password = '$password';";
+	    $query = "Select userID, collegeID From users Where email ='$email' and password = '$password';";
 	    $result = mysqli_query($db, $query);
 		if (mysqli_num_rows($result) == 1) {
 			$row = mysqli_fetch_assoc($result);
 			$_SESSION['userID'] = $row["userID"];
+			$_SESSION['collegeID'] = $row["collegeID"];
 			header("location: home.php");
 		} else {
 			header("location: index.php?login=fail");
@@ -75,18 +76,27 @@ class login {
 			$result = mysqli_query($db,$query);
 			if($result) {
 				$lastID = mysqli_insert_id($db);
-				$_SESSION["userID"] = $lastID;
 				$query = "INSERT INTO party (partyID, partyTypeID) VALUES('$lastID', 1)";
 				$result = mysqli_query($db, $query);
 				if(!$result) {
 					$query = "DELETE FROM users WHERE userID = ". $lastID;
 					header("location: home.php?create=fail");
 				}
+				$_SESSION["userID"] = $lastID;
+				$_SESSION["collegeID"] = $this->getCollegeID($db, $lastID);
 				header("location: home.php?register=success");
             }
         } else {
 			header("location: index.php?create=fail");
 		}
    }
+   
+   function getCollegeID($db, $id) {
+		$query = "SELECT * FROM user Where userID = '$id'";
+		$qResult = mysqli_query($connection, $query);
+		$row = mysqli_fetch_assoc($qResult);
+		return $row["collegeID"];
+   }
+
 }
 ?>

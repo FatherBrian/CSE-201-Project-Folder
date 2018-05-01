@@ -21,6 +21,7 @@ CREATE TABLE college(
 	name Varchar (100),
 	description Varchar (1000),
 	address Varchar (200),
+	srcImg Varchar (80),
 	PRIMARY KEY(collegeID)
 ) ENGINE=InnoDB;
 
@@ -73,8 +74,8 @@ CREATE TABLE comment(
 CREATE TABLE request(
 	requesterID int (9),
 	requesteeID int (9),
-	requesteePartyTypeID int (2)
-	PRIMARY KEY(requesterID, requesteeID)
+	requesteePartyTypeID int (2),
+	PRIMARY KEY(requesterID, requesteeID, requesteePartyTypeID),
 	FOREIGN KEY(requesteePartyTypeID) references partyType(partyTypeID)
 ) ENGINE=InnoDB;
 
@@ -82,14 +83,14 @@ CREATE TABLE connections(
 	userID int (9),
 	otherID int (9),
 	otherPartyTypeID int (2),
-	PRIMARY KEY(connectionID1, connectionID2, partyTypeID),
-	FOREIGN KEY(partyTypeID) references partyType(partyTypeID)
+	PRIMARY KEY(userID, otherID, otherPartyTypeID),
+	FOREIGN KEY(otherPartyTypeID) references partyType(partyTypeID)
 ) ENGINE=InnoDB;
 
 INSERT INTO `party` (`partyID`, `partyTypeID`) VALUES ('1', '3'), ('2', '3'), ('3', '3');
-INSERT INTO `college` (`collegeID`, `name`, `description`, `address`) VALUES ('1', 'Miami University', 'This college is a great college for business and computer science. The typical acceptance rate is 65.4%, and it is located in Oxford, Ohio', '501 E High St, Oxford, OH 45056'); 
-INSERT INTO `college` (`collegeID`, `name`, `description`, `address`) VALUES ('2', 'Ohio State University', 'This college has a great NCAA basketball team, and is well know for its Political Science department. The typical acceptance rate is 49.1%, and it is located in Columbus, Ohio', 'Columbus, OH 43210');
-INSERT INTO `college` (`collegeID`, `name`, `description`, `address`) VALUES ('3', 'Ohio University', 'This college has a great department for studying medicine: The Heritage College of Medicine. The typical acceptance rate is 74%, and it is located in Athens, Ohio', 'Athens, OH 45701');
+INSERT INTO `college` (`collegeID`, `name`, `description`, `address`, `srcImg`) VALUES ('1', 'Miami University', 'This college is a great college for business and computer science. The typical acceptance rate is 65.4%, and it is located in Oxford, Ohio', '501 E High St, Oxford, OH 45056', 'miami.jpg'); 
+INSERT INTO `college` (`collegeID`, `name`, `description`, `address`, `srcImg`) VALUES ('2', 'Ohio State University', 'This college has a great NCAA basketball team, and is well know for its Political Science department. The typical acceptance rate is 49.1%, and it is located in Columbus, Ohio', 'Columbus, OH 43210', 'ohioState.jpg');
+INSERT INTO `college` (`collegeID`, `name`, `description`, `address`, `srcImg`) VALUES ('3', 'Ohio University', 'This college has a great department for studying medicine: The Heritage College of Medicine. The typical acceptance rate is 74%, and it is located in Athens, Ohio', 'Athens, OH 45701', 'ohioU.jpg');
 
 INSERT INTO `party` (`partyID`, `partyTypeID`) VALUES ('1', '1'), ('2', '1'), ('3', '1'), ('4', '1'), ('5', '1'), ('6', '1'), ('7', '1'), ('8', '1'), ('9', '1'), ('10', '1'), ('11', '1'), ('12', '1');
 INSERT INTO `party` (`partyID`, `partyTypeID`) VALUES ('1', '2'), ('2', '2'), ('3', '2'), ('4', '2');
@@ -112,10 +113,9 @@ INSERT INTO `groups` (`groupID`, `name`, `description`, `srcImg`, `managerID`) V
 INSERT INTO `groups` (`groupID`, `name`, `description`, `srcImg`, `managerID`) VALUES ('4', 'Healthy Living', 'We want all of our members to talk about how to live more healthy lives on college campuses', NULL, '3');
 
 
-INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '2', '1');
-INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '4', '1');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '1', '2');
 INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '2', '2');
-INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '3', '2');
+INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '4', '1');
 INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('1', '1', '3');
 
 INSERT INTO `connections` (`userID`, `otherID`, `otherPartyTypeID`) VALUES ('6', '2', '2');
@@ -127,9 +127,7 @@ INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postP
 INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postPartyID`) VALUES ('4', 'Hey man, pumped that you\'re on college book now!', '2018-04-27 08:33:19', '1', '1', '10');
 INSERT INTO `post` (`postID`, `post`, `tStamp`, `partyID`, `partyTypeID`, `postPartyID`) VALUES ('5', 'Hey Nick! You should learn more about healthy living, it seems like a cool page', '2018-04-27 06:22:17', '1', '1', '4');
 
-INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '2', '1');
-INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '4', '1');
-INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '1', '2');
-INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '3', '2');
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('2', '1', '1');
+INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('1', '4', '2');
 INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('6', '1', '1');
 INSERT INTO `request` (`requesterID`, `requesteeID`, `requesteePartyTypeID`) VALUES ('7', '1', '1');

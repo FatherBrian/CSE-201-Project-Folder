@@ -22,14 +22,14 @@
 
 <?php $gen->title(); ?>
 
-<?php $gen->nav(); ?>
+<?php $gen->nav($connection, $server); ?>
 <?php
     if(isset($_POST['submitEntry']))$formData = $_POST['searchEntry'];
     else $formData = NULL;
 ?>
 
-<?php $searchResults->generateUserResults($connection, $formData); ?>
-<?php // $searchResults->generateGroupResults($connection, $formData); ?>
+<?php $searchResults->generateUserResults($connection, $server, $formData); ?>
+<?php $searchResults->generateGroupResults($connection, $server, $formData); ?>
 
 <?php $gen->footer(); ?>
 </body>

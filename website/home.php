@@ -24,7 +24,7 @@
 
 <?php $gen->title(); ?>
 
-<?php $gen->nav(); ?>
+<?php $gen->nav($connection, $server); ?>
 
 <?php $home->generateHomePage($message, $connection, $server, $poster); ?>
 

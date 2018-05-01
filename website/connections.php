@@ -18,7 +18,7 @@
 
 <?php $gen->title(); ?>
 
-<?php $gen->nav(); ?>
+<?php $gen->nav($connection, $server); ?>
 
 <?php $connectionsClass->generateConnections($connection, $server); ?>
 

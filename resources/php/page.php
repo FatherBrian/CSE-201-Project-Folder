@@ -1,42 +1,7 @@
 <?php
 class page {
+	
 	// Functions meant to generate html text
-
-	function connectDB() {
-		$user_agent = getenv("HTTP_USER_AGENT");
-
-		if(strpos($user_agent, "Win") !== FALSE) { 
-			$dbhost = "";
-			$dbuser = "root";
-			$dbpass = "";
-			$dbname = "collegebook";	
-		} elseif(strpos($user_agent, "Mac") !== FALSE) {
-			$dbhost = "";
-			$dbuser = "root";
-			$dbpass = "root";
-			$dbname = "collegebook";
-		}
-		$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-		// Testing connection success/failure
-		if(mysqli_connect_errno()) {
-			die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ")"); 
-		}
-		return $connection;
-	}	
-	
-	function getProfilePic($db) {
-	    $query = "Select * From users Where userID = " . $_SESSION["userID"];
-	    $result = mysqli_query($db, $query);
-
-	    if(mysqli_num_rows($result) > 0) {
-	        $row = mysqli_fetch_assoc($result);
-			if ($row["srcImg"] == NULL) { $img = "basic.png"; }
-			else { $img = $row["srcImg"]; }
-			$img = "/CSE-201-Project-Folder/resources/img/". $img;
-			return $img;
-	    }
-	}
-	
 	function head() {
 		$text = ' <!DOCTYPE html>
 		<html lang="en">
@@ -86,9 +51,8 @@ class page {
 		echo $text;
 	}
 
-	function nav() {
-		$connection = $this->connectDB();
-		$img = $this->getProfilePic($connection);
+	function nav($connection, $db) {
+		$img = $db->getProfilePic($connection);
 		$text = '<nav style="margin-bottom:10px" class="navbar navbar-inverse navbar-static-top">
 		  <div class="container-fluid">
 
@@ -107,6 +71,7 @@ class page {
 				    </form></li>
 			  </ul>
 			  <ul class="nav navbar-nav navbar-right">
+				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/college.php?id='. $_SESSION["collegeID"] .'">College</a></li>
 				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/requests.php">Requests</a></li>
 				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/connections.php">Connections</a></li>
 				<li><a style="padding-top:20px; margin-right:15px;" href="/CSE-201-Project-Folder/website/logout.php">Logout</a></li>
@@ -115,8 +80,165 @@ class page {
 		</nav>';
 		echo $text;
 	}
-
 	
+	
+	
+	// Profile-specific functions
+    function generateButtons($connection, $page, $profileType) {
+		$id = $_GET['id'];
+		if ($profileType == 1) $type = "Friend";
+		else $type = "Group";
+		
+		$text = $this->displayPicture($connection, $type);
+		if ($text == NULL) {
+			$status = $this->getConnectionStatus($connection, $id, $profileType);
+			$text .= $this->displayStatus($status, $id, $type);
+		}
+        return $text;
+    }
+
+	function getConnectionStatus($connection, $otherID, $profileType) {
+        $id = $_SESSION['userID'];
+		if ($id == $otherID && $profileType == 1) { return "Same person"; }
+        $query = "SELECT * FROM connections WHERE userID = '$id' AND otherID = '$otherID' AND otherPartyTypeID = '$profileType'";
+        $result = mysqli_query($connection, $query);
+        if (mysqli_num_rows($result) > 0) return "Connection";
+		else {
+			$query2 = "SELECT * FROM request WHERE (requesterID = '$id' AND requesteeID = '$otherID' AND requesteePartyTypeID = '$profileType')";
+			$result2 = mysqli_query($connection, $query2);
+			if(mysqli_num_rows($result2) > 0) { return "Sent Request"; } 
+			$query3 = "SELECT * FROM request WHERE (requesterID = '$otherID' AND requesteeID = '$id' AND requesteePartyTypeID = '$profileType')";
+			$result3 = mysqli_query($connection, $query3);
+			if(mysqli_num_rows($result3) > 0) { return "Recieved Request"; } 			
+			else { return "No Sent Request"; }
+		}
+	}
+	
+	function displayStatus($status, $id, $type) {
+        $text = '';
+        if($status == "Connection") {
+            $text .= '<form action="?id='. $id .'&action=delete" method="post">';
+			$text .= '<input class="buttonDesign1" type="submit" value="Remove ' . $type .'"></form>';
+        } else if ($status == "Sent Request") {
+            $text .= '<form action="?id='. $id .'&action=removeRequest" method="post">';
+			$text .= '<input class="buttonDesign1" type="submit" value="Remove ' . $type .' Request"></form>';
+		} else if ($status == "No Sent Request") {
+            $text .= '<form action="?id='. $id .'&action=sendRequest" method="post">';
+			$text .= '<input class="buttonDesign1" type="submit" value="Send ' . $type .' Request"></form>';			
+		} else if ($status == "Recieved Request") {
+            $text .= '<form action="?id='. $id .'&action=add" method="post">';
+			$text .= '<input class="buttonDesign1" type="submit" value="Accept ' . $type .' Request"></form>';			
+		}
+		return $text;
+	}
+	
+	function displayPicture($connection, $type) {
+		$id = $_GET["id"];
+		if ($type == "Group") $canUpload = $this->isGroupManager($connection);
+		else if ($_SESSION["userID"] == $id) $canUpload = True;
+		else $canUpload = False;
+
+		$text = NULL;
+		if ($canUpload) {
+			$text .= '<form action="?id='. $id .'&action=uploadImg" class="profileForm" method="post" enctype="multipart/form-data">';
+			$text .= 'Select New Image: <input type="file" class="uploadImgButton" name="srcImg" id="srcImg" accept="image/*">';
+			$text .= '<input class="buttonDesign1 uploadImg" value="Upload Image" type="submit"></form>';
+		}
+		return $text;
+	}
+	
+	function isGroupManager($connection) {
+		$id = $_SESSION["userID"];
+		$groupID = $_GET["id"];
+		$query = "Select * From groups Where managerID = '$id' And groupID = '$groupID'";
+		// echo $query;
+        $result = mysqli_query($connection, $query);
+        if (mysqli_num_rows($result) > 0) return True;
+		else return False;
+	}
+	
+	function processAction($connection, $type) {
+		if (isset($_GET['action'])) { $action = $_GET['action']; } 
+		else { $action = "none"; }
+		
+		if ($action == 'uploadImg') { $this->uploadImage($connection, $type, $_FILES); }
+		if ($action == 'uploadSuccess') { $this->uploadImage($connection, $type, $_FILES); }
+
+		if ($action=='add') { $this->acceptConnection($connection, $type); } 
+		elseif ($action=='delete') { $this->deleteConnection($connection, $type); }
+		elseif ($action=='removeRequest') { $this->removeRequest($connection, $type); }
+		elseif ($action=='sendRequest') { $this->sendRequest($connection, $type); }
+	}
+	
+	function uploadImage($connection, $type, $img) {
+		print_r($img);
+		$dir = dirname(__FILE__) . "/../img/";
+		$uploadFile = $dir . basename($img['srcImg']['name']);
+		
+		if (move_uploaded_file($img['srcImg']['tmp_name'], $uploadFile)) $message = "File is valid, and was successfully uploaded.\n";
+		else $message = "Upload failed";
+		
+		$id = $_GET["id"];
+		if ($type == "profile") {
+			$query = "UPDATE users SET srcImg = '". basename($img['srcImg']['name']) ."' WHERE userID = ". $id;
+			mysqli_query($connection, $query);
+			header ("location: ". $type .".php?id=". $id);
+		} else {
+			$query = "UPDATE groups SET srcImg = '". basename($img['srcImg']['name']) ."' WHERE groupID = ". $id;
+			mysqli_query($connection, $query);
+			header ("location: ". $type .".php?id=". $id);			
+		}
+		
+	}
+	
+    function acceptConnection($connect, $type) {
+        $id = $_SESSION['userID'];
+		$otherID = $_GET['id'];
+		if ($type == "profile") $typeID = 1;
+		else $typeID = 2;
+
+        $query = "INSERT INTO connections (userID, otherID, otherPartyTypeID) VALUES ('$id', '$otherID', '$typeID')";
+        mysqli_query($connect, $query);
+
+        $query = "DELETE FROM request WHERE (requesterID = '$otherID' and requesteeID = '$id' and requesteePartyTypeID = '$typeID')";
+        mysqli_query($connect, $query);
+		
+		header ("location: ". $type .".php?id=". $otherID);
+    }
+
+    function deleteConnection($connect, $type) {
+        $id = $_SESSION['userID'];
+		$otherID = $_GET['id'];
+		if ($type == "profile") $typeID = 1;
+		else $typeID = 2;
+
+        $query = "DELETE FROM connections WHERE (userID = '$id' and otherID = '$otherID' and otherPartyTypeID = '$typeID')";
+        mysqli_query($connect, $query);
+		header ("location: ". $type .".php?id=". $otherID);
+	}
+	
+    function sendRequest($connect, $type) {
+        $id = $_SESSION['userID'];
+		$otherID = $_GET['id'];
+		if ($type == "profile") $typeID = 1;
+		else $typeID = 2;
+
+        $query = "INSERT INTO request (requesterID, requesteeID, requesteePartyTypeID) VALUES ('$id', '$otherID', '$typeID')";
+        mysqli_query($connect, $query);
+		header ("location: ". $type .".php?id=". $otherID);
+    }
+
+    function removeRequest($connect, $type){
+        $id = $_SESSION['userID'];
+		$otherID = $_GET['id'];
+		if ($type == "profile") $typeID = 1;
+		else $typeID = 2;
+
+        $query = "DELETE FROM request WHERE requesterID = '$id' and requesteeID = '$otherID' and requesteePartyTypeID = '$typeID'";
+        mysqli_query($connect, $query);
+		header ("location: ". $type .".php?id=". $otherID);
+    }
+
 	
 	//General Input Functions
 	function show_subitem() {

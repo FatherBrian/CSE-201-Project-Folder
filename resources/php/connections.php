@@ -37,30 +37,26 @@ class connections {
 		return $data;
 	}
 	function displayGroupConnections($groupInfo) {
-		$text = '<div class="col-xs-6"><h1> Followed Groups: </h1><ul class="connectionsList">';
-		$id = $_SESSION['userID'];
-		$groupFound = False;
-		foreach($groupInfo as $row) {
-			$groupFound = True;
-			$text .= '<li><a href="group.php?id='. $row["id"] .'">'. $row["name"] .'</a></li>'; 
-		}
+		$text = '<div class="col-xs-6"><h1> Groups </h1><ul class="connectionsList">';
+		if ($groupInfo != NULL) {
+			foreach($groupInfo as $row) {
+				$text .= '<li><a href="group.php?id='. $row["id"] .'">'. $row["name"] .'</a></li>'; 
+			}
+		} else { $text .= '<li> No groups have been followed </li>'; }
 		$text .='</ul></div>';
-		if (!$groupFound) { $text = '</div><div class="col-xs-6"><h1> No groups have been followed </h1>'; }
 		return $text;
 	}	
 
 	function displayUserConnections($userInfo) {
-		$text = '<div class="col-xs-6"><h1> Friends: </h1><ul class="connectionsList">';
-		$id = $_SESSION['userID'];
-		$userFound = False;
-		foreach($userInfo as $row) {
-			$userFound = True;
-			$name = $row["fName"] ." ". $row["lName"];
-			$text .= '<li><a href="profile.php?id='. $row["id"] .'">'. $name .'</a></li>'; 
-		}
+		$text = '<div class="col-xs-6"><h1> Friends </h1><ul class="connectionsList">';
+		if ($userInfo != NULL) {
+			foreach($userInfo as $row) {
+				$name = $row["fName"] ." ". $row["lName"];
+				$text .= '<li><a href="profile.php?id='. $row["id"] .'">'. $name .'</a></li>'; 
+			}
+		} else { $text .= '<li> No friends have been added </li>'; }
 		$text .='</ul></div>';
-		if (!$userFound) { $text = '</div><div class="col-xs-6"><h1> No friends have been added </h1>'; }
-		return $text;
+		return $text;		
 	}	
 
 }
