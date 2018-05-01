@@ -66,11 +66,11 @@ class login {
 		$country = $_POST["country"];
 		$email = $_POST["email"];
 
-        $querycheck = "Select username From users Where email = '$email'";
-        $resultcheck = mysqli_query($db, $querycheck);
-        $count = mysqli_num_rows($resultcheck);
+        $querycheck = "Select * From users Where email = '$email'";
+		echo $querycheck;
+        $result = mysqli_query($db, $querycheck);
 
-        if($count==0) {			
+        if (mysqli_num_rows($result) == 0) {
 			$query = "INSERT INTO users (fName, lName, password, bDate, collegeID, country, email, srcImg) VALUES('$fName', '$lName', '$password', '$bDate', '$college', '$country', '$email', NULL)";
 			echo $query;
 			$result = mysqli_query($db,$query);
@@ -91,10 +91,11 @@ class login {
 		}
    }
    
-   function getCollegeID($db, $id) {
-		$query = "SELECT * FROM user Where userID = '$id'";
+   function getCollegeID($connection, $id) {
+		$query = "SELECT * FROM users Where userID = '$id'";
 		$qResult = mysqli_query($connection, $query);
 		$row = mysqli_fetch_assoc($qResult);
+		print_r($row);
 		return $row["collegeID"];
    }
 
