@@ -70,6 +70,7 @@ class database {
 		foreach($idList as $id) { $names .= "'". $id ."',"; }
 		if (count($idList) == 0) $names = "NULLL";
 		$query = "Select * From users Where userID IN (". substr($names, 0, -1) .")";
+		
         $result = mysqli_query($connection, $query);
 		
         if (mysqli_num_rows($result) > 0) {
@@ -79,21 +80,6 @@ class database {
 			}
 		}
 		return $friends;
-	}
-
-	function getCollegeInfo($connection, $collegeID) { // For [See posts, View members
-        $college = array();
-		
-		$query = "Select * From college Where collegeID = '$collegeID'";
-        $result = mysqli_query($connection, $query);
-		$count = 0;
-
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-				// array_push($college, "collegeID"=>$result["collegeID"], "name"=>$result["name"], "description"=>$result["description"], "address"=>$result["address"]);
-			}
-		}
-		return $college;
 	}
 	
 	function getConnections($connection, $id) {
@@ -110,6 +96,25 @@ class database {
 		}
 		return $connections;
 		
+	}
+
+	function getMessages($connection, $userID) {
+		$messages = array();
+		$sendIDs = array();
+		$content = array();
+		$query = "Select * From message Where recieveID = '$userID'";
+        $result = mysqli_query($connection, $query);
+
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+				$temp1 = array("message"=>$row["message"], "tStamp"=>$row["tStamp"], "sendID"=>$row["sendID"]);
+				array_push($content, $temp1);
+				array_push($sendIDs, $row["sendID"]);				
+			}
+			$temp = array("messages"=>$content, "sendIDs"=>$sendIDs);
+			array_push($messages, $temp);
+		} else $messages = NULL;
+		return $messages;
 	}
 	
 	function getCollege($connection, $id) {

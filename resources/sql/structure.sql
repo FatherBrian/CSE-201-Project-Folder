@@ -87,6 +87,17 @@ CREATE TABLE connections(
 	FOREIGN KEY(otherPartyTypeID) references partyType(partyTypeID)
 ) ENGINE=InnoDB;
 
+CREATE TABLE message(
+	messageID int (11) NOT NULL AUTO_INCREMENT,
+	message Varchar (1000),
+	tStamp DATETIME,
+	sendID int (9),
+	recieveID int (9),
+	PRIMARY KEY(messageID),
+	FOREIGN KEY(sendID) references users(userID),
+	FOREIGN KEY(recieveID) references users(userID)
+) ENGINE=InnoDB;
+
 INSERT INTO `party` (`partyID`, `partyTypeID`) VALUES ('1', '3'), ('2', '3'), ('3', '3');
 INSERT INTO `college` (`collegeID`, `name`, `description`, `address`, `srcImg`) VALUES ('1', 'Miami University', 'This college is a great college for business and computer science. The typical acceptance rate is 65.4%, and it is located in Oxford, Ohio', '501 E High St, Oxford, OH 45056', 'miami.jpg'); 
 INSERT INTO `college` (`collegeID`, `name`, `description`, `address`, `srcImg`) VALUES ('2', 'Ohio State University', 'This college has a great NCAA basketball team, and is well know for its Political Science department. The typical acceptance rate is 49.1%, and it is located in Columbus, Ohio', 'Columbus, OH 43210', 'ohioState.jpg');

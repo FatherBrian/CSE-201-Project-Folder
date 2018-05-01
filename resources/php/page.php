@@ -74,6 +74,7 @@ class page {
 				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/college.php?id='. $_SESSION["collegeID"] .'">College</a></li>
 				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/requests.php">Requests</a></li>
 				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/connections.php">Connections</a></li>
+				<li><a style="padding-top:20px;" href="/CSE-201-Project-Folder/website/message.php">Messages</a></li>
 				<li><a style="padding-top:20px; margin-right:15px;" href="/CSE-201-Project-Folder/website/logout.php">Logout</a></li>
 			  </ul>
 		  </div><!-- /.container-fluid -->
@@ -199,6 +200,8 @@ class page {
 
         $query = "INSERT INTO connections (userID, otherID, otherPartyTypeID) VALUES ('$id', '$otherID', '$typeID')";
         mysqli_query($connect, $query);
+        // $query2 = "INSERT INTO connections (userID, otherID, otherPartyTypeID) VALUES ('$otherID', '$id', '$typeID')";
+        // mysqli_query($connect, $query2);
 
         $query = "DELETE FROM request WHERE (requesterID = '$otherID' and requesteeID = '$id' and requesteePartyTypeID = '$typeID')";
         mysqli_query($connect, $query);
@@ -213,6 +216,7 @@ class page {
 		else $typeID = 2;
 
         $query = "DELETE FROM connections WHERE (userID = '$id' and otherID = '$otherID' and otherPartyTypeID = '$typeID')";
+        // $query = "DELETE FROM connections WHERE (userID = '$id' and otherID = '$otherID' and otherPartyTypeID = '$typeID') OR (userID = '$otherID' and otherID = '$id' and otherPartyTypeID = '$typeID')";
         mysqli_query($connect, $query);
 		header ("location: ". $type .".php?id=". $otherID);
 	}

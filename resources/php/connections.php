@@ -36,6 +36,7 @@ class connections {
 		array_push($data, $temp);
 		return $data;
 	}
+	
 	function displayGroupConnections($groupInfo) {
 		$text = '<div class="col-xs-6"><h1> Groups </h1><ul class="connectionsList">';
 		if ($groupInfo != NULL) {
@@ -55,9 +56,47 @@ class connections {
 				$text .= '<li><a href="profile.php?id='. $row["id"] .'">'. $name .'</a></li>'; 
 			}
 		} else { $text .= '<li> No friends have been added </li>'; }
-		$text .='</ul></div>';
+		$text .='</ul>';
+		if ($userInfo != NULL) $text .= $this->makeMessage($userInfo);
 		return $text;		
-	}	
+	}
+	
+	function makeMessage($userInfo) {
+		$text = '<div class="col-xs-6"><h1> Send Message </h1>';
+        $text .= ' <div class="makeMessage">
+                  <form action="connections.php?action=sendMessage" style="padding-top:20px;" method="post">
+				  Send To: <select name="recieveID">'. $this->makeOptions($userInfo) .'</select>
+				  <textarea style="margin-top:20px;" id="message" name="message"></textarea>
+				  <input class="buttonDesign1 uploadImg" style="display:block;" type="submit" name="submit" value="Send Message">
+				  </form></div></div>';
+        return $text;		
+	}
+	
+	function makeOptions($userInfo) {
+		$text = '';
+		foreach($userInfo as $row) {
+			$name = $row["fName"] ." ". $row["lName"];
+			$text .= '<option value="'. $row["id"] .'">'. $name . '</option>'; 
+		}
+		return $text;
+	}		
+	
+	function processMessages($connection) {
+		if (isset($_GET['action'])) { $action = $_GET['action']; } 
+		else { $action = "none"; }
+		
+		if ($action == 'sendMessage') { $this->sendMessage($connection, $_FILES); }
+	}
+	
+	function sendMessage($connection) {
+		$message = $_POST['message'];
+		$sendID = $_SESSION['userID'];
+		$recieveID = $_POST['recieveID'];
+	    $time = date('Y-m-d H:i:s');		
+        $query = "INSERT INTO message (message, tStamp, sendID, recieveID) VALUES ('$message', '$time', '$sendID', '$recieveID')";
+        mysqli_query($connection, $query);
+		
+	}
 
 }
 
