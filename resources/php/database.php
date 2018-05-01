@@ -67,7 +67,9 @@ class database {
 	function getUserInfo($connection, $idList) { // For [See posts, View members
 		$friends = array();
 		$names = "";
-		foreach($idList as $id) { $names .= "'". $id ."',"; }
+		if (count($idList) != 0) {
+			foreach($idList as $id) { $names .= "'". $id ."',"; }
+		}
 		if (count($idList) == 0) $names = "NULLL";
 		$query = "Select * From users Where userID IN (". substr($names, 0, -1) .")";
 		
