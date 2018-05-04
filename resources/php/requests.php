@@ -43,6 +43,7 @@ class requests {
 		array_push($data, $temp);
 		return $data;
 	}
+	
 	function displayFriendRequests($recieveUsers, $sentUsers) {
 		$text = '<div class="col-xs-6"><h1> Recieved Friends Requests </h1><ul class="requestsList">';
 		if ($recieveUsers != NULL) {

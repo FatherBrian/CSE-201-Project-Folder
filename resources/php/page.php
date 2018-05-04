@@ -90,7 +90,7 @@ class page {
 		if ($profileType == 1) $type = "Friend";
 		else $type = "Group";
 		
-		$text = $this->displayPicture($connection, $type);
+		$text = $this->displayManagerSettings($connection, $type);
 		if ($text == NULL) {
 			$status = $this->getConnectionStatus($connection, $id, $profileType);
 			// $text .= $this->displayMemberRequests($connection)
@@ -134,7 +134,7 @@ class page {
 		return $text;
 	}
 	
-	function displayPicture($connection, $type) {
+	function displayManagerSettings($connection, $type) {
 		$id = $_GET["id"];
 		if ($type == "Group") $canUpload = $this->isGroupManager($connection);
 		else if ($_SESSION["userID"] == $id) $canUpload = True;
