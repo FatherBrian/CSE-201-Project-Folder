@@ -1,0 +1,45 @@
+/groups?id=N
+
+	webpage
+		-Add link to new webpage
+			-$group->generateGroupPage($connection, $server, $poster, $gen);
+				-$this->generateProfile($connection, $page); [group class]
+					$page->generateButtons($connection, $page, 2); [page class]
+						-$this->displayManagerSettings($connection, $type);
+							-[if ($canUpload) {] section: Add to text variable link to /groups/viewMemebers?id=N page
+	php
+		-None
+	
+/groups/viewMemebers?id=N
+	
+	[Copy group webpage, request class for template; easier to create logic from these templates]
+	webpage
+		-Create way of processing request accepting/removing
+			-$gen->processAction($connection, "somethingNew") [page class]
+				-Option 1: Add new functions to insert new requests into db
+				-Option 2: Alter current functions to insert new requests into database
+					-Add additional parameter, or alter logic with $type variable (2nd parameter in processAction() function
+					-In my opinion a better more efficent way, but is more complicated
+						-Do what ur comfortable with
+	php
+		-Create function that generates new content
+			-$requestManager->generateRequestsPage($connection, $server, $poster, $gen); [viewMembers class]
+				-$data = $this->getRequestsInfo($connection, $db);
+					$ids = $db->getRequests($connection, $_GET["id"]); [database class]
+						-Returns requests table info associated with specific id
+					$newIds = $this->splitRequests($ids);
+						-Alter to add ids into an array if requestPartyTypeID = 2 (2 -> group), and requesteeID = $_GET["id"]
+					$userInfo = $db->getUserInfo($connection, $newIds[0])
+						-Gets info on users, based off of a list of IDs
+					return $userInfo
+				-$text .= $this->displayRequests($data);
+					-If $data != NULL, loop through and add
+						-Ex:
+							foreach($sentUsers as $row) {
+								$name = $row["fName"] ." ". $row["lName"];
+								$text .= '<li><a href="groups/viewMemebers.php?id='. $_GET["id"] .'&?action=add&userID=. $row['id'] .'">Accept '. $name .'</a>'; 
+								$text .= '<li><a href="groups/viewMemebers.php?id='. $_GET["id"] .'&action=delete&userID=. $row['id'] .'">Remove Request</a></li>'; 
+							}
+							-Note: &action=delete referenced in $gen->processAction($connection, "somethingNew") function
+								-&userID will only be used on this page; if that's set, do you're specific add/remove DB queries within processAction
+						
